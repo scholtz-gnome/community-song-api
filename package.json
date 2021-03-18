@@ -7,7 +7,6 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "tsc && node build/src/server.js",
     "test": "jest"
   },
   "author": "",
