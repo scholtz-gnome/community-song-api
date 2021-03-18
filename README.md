@@ -1,2 +1,3 @@
-# community-song-api
-A Node.js API for the community song app. Written in TypeScript
+# Community Song API
+
+The api for Community Song is written in TypeScript and runs in Node.js using the Express.js framework.
