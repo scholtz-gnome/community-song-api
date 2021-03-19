@@ -4,14 +4,7 @@ import cors from "cors";
 export function newApp(): Express {
   const app = express();
 
-  app.use(cors());
-  app.use(function (req, res, next) {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      "https://community-song.herokuapp.com/"
-    );
-    next();
-  });
+  app.use(cors({ allowedHeaders: ["Content-Type", "Authorization"] }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
