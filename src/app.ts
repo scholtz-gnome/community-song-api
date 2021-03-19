@@ -4,11 +4,14 @@ import cors from "cors";
 export function newApp(): Express {
   const app = express();
 
-  app.use(
-    cors({
-      origin: "https://community-song.herokuapp.com/",
-    })
-  );
+  app.use(cors());
+  app.use(function (req, res, next) {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://community-song.herokuapp.com/"
+    );
+    next();
+  });
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
