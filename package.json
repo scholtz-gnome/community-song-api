@@ -12,7 +12,7 @@
   },
   "scripts": {
     "postinstall": "tsc",
-    "start": "node dist/src/server.js",
+    "start": "tsc && node dist/src/server.js",
     "test": "jest"
   },
   "author": "",
