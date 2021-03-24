@@ -9,7 +9,7 @@ export const getSongs = (req: Request, res: Response) => {
 
 export const postSong = (req: Request, res: Response) => {
   if (req.files === undefined) {
-    return res.status(400).json({ msg: "No file uploaded" });
+    return res.status(400).json({ message: "No file uploaded" });
   }
 
   const song = req.files.file as UploadedFile;
@@ -19,10 +19,18 @@ export const postSong = (req: Request, res: Response) => {
     (err) => {
       if (err) {
         console.error(err);
-        return res.status(400);
+        return res.status(400).json({
+          success: false,
+          message: "Your file upload was unsuccesful.",
+        });
       }
 
-      res.json({ fileName: song.name, filePath: `/uploads/${song.name}` });
+      res.json({
+        success: true,
+        message: "Your file was uploaded successfully.",
+        fileName: song.name,
+        filePath: `/uploads/${song.name}`,
+      });
     }
   );
 };
