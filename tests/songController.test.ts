@@ -4,7 +4,7 @@ import fs from "fs";
 
 const app = newApp();
 
-describe("Upload a pdf", () => {
+describe("Upload a pdf", async () => {
 import { promisify } from 'util';
 
 const writeFile = promisify(fs.writeFile);
