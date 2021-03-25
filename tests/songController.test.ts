@@ -1,20 +1,19 @@
 import request from "supertest";
-import { newApp } from "../src/app";
 import fs from "fs";
+import { newApp } from "../src/app";
+import { promisify } from "util";
 
 const app = newApp();
 
 describe("Upload a pdf", async () => {
-import { promisify } from 'util';
+  const writeFile = promisify(fs.writeFile);
+  const deleteFile = promisify(fs.unlink);
 
-const writeFile = promisify(fs.writeFile);
-const deleteFile = promisify(fs.unlink);
+  const fileName = "test.pdf";
+  const filePath = `${__dirname}/testUploads/${fileName}`;
 
-const fileName = 'test.pdf';
-const filePath = `${__dirname}/testUploads/${fileName}`;
-
-beforeAll(async () => writeFile(filePath, ''));
-afterAll(async() => deleteFile(filePath));
+  beforeAll(async () => writeFile(filePath, ""));
+  afterAll(async () => deleteFile(filePath));
 
   it("uploads a pdf to the server directory uploads/", async () => {
     const res = await request(app)
