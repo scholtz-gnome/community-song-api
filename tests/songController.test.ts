@@ -12,7 +12,7 @@ describe("Upload a pdf", () => {
       .post("/song/upload")
       .attach("file", testFilePath);
     const { success, message, fileName, filePath } = res.body;
-    expect(success).toBeTruthy();
+    expect(success).toBe(true);
     expect(message).toBe("Your file was uploaded successfully.");
     expect(fileName).toBe("testpdf");
     expect(typeof filePath).toBeTruthy();
