@@ -15,7 +15,7 @@ describe("Upload a pdf", () => {
     expect(success).toBe(true);
     expect(message).toBe("Your file was uploaded successfully.");
     expect(fileName).toBe("testpdf");
-    expect(typeof filePath).toBeTruthy();
+    expect(filePath).stringContaining(fileName);
 
     /* -- another attempt --
     await fs.access(testFilePath, (err) => {
