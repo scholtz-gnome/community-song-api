@@ -15,14 +15,16 @@ describe("Upload a pdf", () => {
   beforeAll(async () => writeFile(testFilePath, ""));
   afterAll(async () => deleteFile(testFilePath));
 
-  it("uploads a pdf to the server directory testUploads/", async () => {
-    const res = await request(app)
+  it("uploads a pdf to the server directory testUploads/", () => {
+    return request(app)
       .post("/song/upload")
-      .attach("file", testFilePath);
-    const { success, message, fileName, filePath } = res.body;
-    expect(success).toBe(true);
-    expect(message).toBe("Your file was uploaded successfully.");
-    expect(fileName).toBe("testpdf");
-    expect(filePath).toEqual(expect.stringContaining(fileName));
+      .attach("file", testFilePath)
+      .expect((res) => {
+        const { success, message, fileName, filePath } = res.body;
+        expect(success).toBe(true);
+        expect(message).toBe("Your file was uploaded successfully.");
+        expect(fileName).toBe("testpdf");
+        expect(filePath).toEqual(expect.stringContaining(fileName));
+      });
   });
 });
