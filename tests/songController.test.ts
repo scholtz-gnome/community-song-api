@@ -5,7 +5,16 @@ import fs from "fs";
 const app = newApp();
 
 describe("Upload a pdf", () => {
-  const testFilePath = `${__dirname}/testUploads/test.pdf`;
+import { promisify } from 'util';
+
+const writeFile = promisify(fs.writeFile);
+const deleteFile = promisify(fs.unlink);
+
+const fileName = 'test.pdf';
+const filePath = `${__dirname}/testUploads/${fileName}`;
+
+beforeAll(async () => writeFile(filePath, ''));
+afterAll(async() => deleteFile(filePath));
 
   it("uploads a pdf to the server directory uploads/", async () => {
     const res = await request(app)
