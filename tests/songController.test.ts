@@ -16,23 +16,5 @@ describe("Upload a pdf", () => {
     expect(message).toBe("Your file was uploaded successfully.");
     expect(fileName).toBe("testpdf");
     expect(filePath).stringContaining(fileName);
-
-    /* -- another attempt --
-    await fs.access(testFilePath, (err) => {
-      if (err) {
-        throw new Error(`${err}`);
-      }
-    });
-
-    return
-      .then((res) => {
-        const { success, message, fileName, filePath } = res.body;
-        expect(success).toBeTruthy();
-        expect(message).toBe("Your file was uploaded successfully.");
-        expect(fileName).toBe("testpdf");
-        expect(typeof filePath).toBeTruthy();
-      })
-      .catch((err) => console.log(err));
-      */
   });
 });
