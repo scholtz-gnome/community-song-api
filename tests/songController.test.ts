@@ -5,17 +5,17 @@ import { promisify } from "util";
 
 const app = newApp();
 
-describe("Upload a pdf", async () => {
+describe("Upload a pdf", () => {
   const writeFile = promisify(fs.writeFile);
   const deleteFile = promisify(fs.unlink);
 
-  const fileName = "test.pdf";
-  const filePath = `${__dirname}/testUploads/${fileName}`;
+  const testFileName = "test.pdf";
+  const testFilePath = `${__dirname}/testUploads/${testFileName}`;
 
-  beforeAll(async () => writeFile(filePath, ""));
-  afterAll(async () => deleteFile(filePath));
+  beforeAll(async () => writeFile(testFilePath, ""));
+  afterAll(async () => deleteFile(testFilePath));
 
-  it("uploads a pdf to the server directory uploads/", async () => {
+  it("uploads a pdf to the server directory testUploads/", async () => {
     const res = await request(app)
       .post("/song/upload")
       .attach("file", testFilePath);
@@ -23,6 +23,6 @@ describe("Upload a pdf", async () => {
     expect(success).toBe(true);
     expect(message).toBe("Your file was uploaded successfully.");
     expect(fileName).toBe("testpdf");
-    expect(filePath).stringContaining(fileName);
+    expect(filePath).toEqual(expect.stringContaining(fileName));
   });
 });
