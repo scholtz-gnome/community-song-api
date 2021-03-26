@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import db from "../../db/db.connection";
 import { UploadedFile } from "express-fileupload";
 
 export const getSongs = (req: Request, res: Response) => {
@@ -16,7 +15,7 @@ export const postSong = (req: Request, res: Response) => {
 
   const song = req.files.file as UploadedFile;
 
-  if (song.size <= 10) {
+  if (song.size <= 10) { // TODO: don't filter for file size here - use middleware config
     song.mv(
       `/Users/stephenscholtz/projects/community-song-api/uploads/${song.name}`,
       (err) => {
