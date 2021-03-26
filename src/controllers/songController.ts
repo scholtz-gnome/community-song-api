@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
+import { config } from "../../config";
 
 export const getSongs = (req: Request, res: Response) => {
   // query db for all songs
@@ -14,22 +15,19 @@ export const postSong = (req: Request, res: Response) => {
 
   const song = req.files.file as UploadedFile;
 
-  song.mv(
-    `/Users/stephenscholtz/projects/community-song-api/uploads/${song.name}`,
-    (err) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: "Your file upload was unsuccesful.",
-        });
-      }
-
-      res.status(200).json({
-        success: true,
-        message: "Your file was uploaded successfully.",
-        fileName: song.name,
-        filePath: `/uploads/${song.name}`,
+  song.mv(`${config.PROJECT_DIR}${song.name}`, (err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err,
       });
     }
-  );
+
+    res.status(200).json({
+      success: true,
+      message: `${song.name} was successfully uploaded`,
+      fileName: song.name,
+      filePath: `${config.PROJECT_DIR}${song.name}`,
+    });
+  });
 };

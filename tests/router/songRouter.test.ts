@@ -29,6 +29,9 @@ describe("songRouter", () => {
             .post(path)
             .attach("file", fileBuffer, fileName);
 
+          expect(response.body.message).toBe(
+            `${fileName} was successfully uploaded`
+          );
           expect(response.status).toEqual(200);
           done();
         });
