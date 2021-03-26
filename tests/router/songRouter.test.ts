@@ -3,7 +3,7 @@ import express from "express";
 import songRouter from "../../src/routes/songRouter";
 
 describe("songRouter", () => {
-  const path = "/";
+  const path = "/songs";
   const app = express();
   app.use("/", songRouter);
 
@@ -17,7 +17,7 @@ describe("songRouter", () => {
       });
     });
 
-    fdescribe("When a file with a valid file-type is attached", () => {
+    describe("When a file with a valid file-type is attached", () => {
       const fileType = "pdf";
       const fileName = `testFile.${fileType}`;
 
