@@ -6,8 +6,8 @@ const FIFTY_MEGABYTES = 50 * 1024 * 1024; // TODO extract to config
 
 const songRouter: Router = Router();
 
-songRouter.get("/", getSongs);
+songRouter.get("/songs", getSongs);
 songRouter.use(fileUpload({ limits: { fileSize: FIFTY_MEGABYTES } }));
-songRouter.post("/", postSong);
+songRouter.post("/songs", postSong);
 
 export default songRouter;

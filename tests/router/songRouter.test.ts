@@ -3,7 +3,7 @@ import express from "express";
 import songRouter from "../../src/routes/songRouter";
 
 describe("songRouter", () => {
-  const path = "/";
+  const path = "/songs";
   const app = express();
   app.use("/", songRouter);
 
@@ -17,12 +17,12 @@ describe("songRouter", () => {
       });
     });
 
-    fdescribe("When a file with a valid file-type is attached", () => {
+    describe("When a file with a valid file-type is attached", () => {
       const fileType = "pdf";
       const fileName = `testFile.${fileType}`;
 
       describe("When the file is smaller than the upper limit", () => {
-        fit("responds with a 200 code", async (done) => {
+        it("responds with a 200 code", async (done) => {
           const fileBuffer = Buffer.alloc(5, 1, "utf-8");
 
           const response = await request(app)
