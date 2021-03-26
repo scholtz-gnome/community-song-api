@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: "node",
-  testRegex: "(/dist/__tests__/.*|(\\.|/)(test|spec))\\.[j]s?$",
+  preset: "ts-jest",
+  testRegex: "(/dist/__tests__/.*|(\\.|/)(test|spec))\\.[t]s?$",
   verbose: true,
 };
