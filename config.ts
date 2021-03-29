@@ -11,7 +11,7 @@ interface Config {
 export const config: Config = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV || "test",
-  MAX_FILE_SIZE: 50 * 1024 * 1024,
+  MAX_FILE_SIZE: 10 * 1024 * 1024,
   PROJECT_DIR: __dirname,
   aws: {
     accessKey: process.env.AWS_ACCESS_KEY_ID,
