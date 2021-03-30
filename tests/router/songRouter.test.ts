@@ -3,7 +3,7 @@ import express, { Express } from "express";
 import songRouter from "../../src/routes/songRouter";
 
 describe("songRouter", () => {
-  const path = "/songs";
+  const path: string = "/songs";
   const app: Express = express();
   app.use("/songs", songRouter);
 
@@ -27,10 +27,11 @@ describe("songRouter", () => {
 
           const response = await request(app)
             .post(path)
+            .field({ title: `${fileName}` })
             .attach("file", fileBuffer, fileName);
 
           expect(response.body.message).toBe(
-            `${fileName} was successfully uploaded`
+            `File "${fileName}" uploaded successfully`
           );
           expect(response.status).toEqual(200);
           done();
@@ -39,15 +40,17 @@ describe("songRouter", () => {
 
       describe("When the file is larger than the upper limit", () => {
         it("responds with a 413 code", async (done) => {
-          const FIFY_ONE_MEGABYTES = 51 * 1024 * 1024;
-          const fileBuffer = Buffer.alloc(FIFY_ONE_MEGABYTES, 1, "utf-8");
+          const ELEVEN_ONE_MEGABYTES = 11 * 1024 * 1024;
+          const fileBuffer = Buffer.alloc(ELEVEN_ONE_MEGABYTES, 1, "utf-8");
 
           const response = await request(app)
             .post(path)
             .attach("file", fileBuffer, fileName);
 
           expect(response.status).toEqual(413);
-          expect(response.text).toBe("File is too big. Max size is 50MB.");
+          expect(response.body.message).toBe(
+            "File size exceeded. Cannot exceed 10MB."
+          );
           done();
         });
       });
