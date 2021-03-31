@@ -6,6 +6,11 @@ interface Config {
   MAX_FILE_SIZE: number;
   PROJECT_DIR: string;
   aws: { accessKey: string | undefined; secretAccessKey: string | undefined };
+  DATABASE_URL: string | undefined;
+  HEROKU_POSTGRESQL_YELLOW_URL: string | undefined;
+  HEROKU_POSTGRESQL_WHITE_URL: string | undefined;
+  AUTH_SECRET: string | undefined;
+  CLIENT_ID: string | undefined;
 }
 
 export const config: Config = {
@@ -17,4 +22,9 @@ export const config: Config = {
     accessKey: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
+  DATABASE_URL: process.env.DATABASE_URL,
+  HEROKU_POSTGRESQL_YELLOW_URL: process.env.HEROKU_POSTGRESQL_YELLOW_URL,
+  HEROKU_POSTGRESQL_WHITE_URL: process.env.HEROKU_POSTGRESQL_WHITE_URL,
+  AUTH_SECRET: process.env.AUTH_SECRET,
+  CLIENT_ID: process.env.CLIENT_ID,
 };

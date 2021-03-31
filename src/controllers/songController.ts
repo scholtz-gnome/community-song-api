@@ -2,9 +2,14 @@ import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { config } from "../../config";
 import aws from "aws-sdk";
+import db from "../../db/db.connection";
 
 export const getSongs = async (req: Request, res: Response) => {
   try {
+    const dbData = await db
+      .select("first_name AS firstName", "last_name AS lastName")
+      .from("user")
+      .where("id", 1);
     const s3 = new aws.S3();
 
     s3.listObjects(
@@ -13,7 +18,7 @@ export const getSongs = async (req: Request, res: Response) => {
       },
       (err, data) => {
         try {
-          res.status(200).json({ data });
+          res.status(200).json({ data, dbData: dbData });
         } catch (error) {
           console.log("Error from S3: " + err);
           console.log("Error from server: " + error);

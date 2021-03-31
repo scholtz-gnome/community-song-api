@@ -1,18 +1,14 @@
 import { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
-  // Deletes ALL existing entries
-  await knex("users").del();
+  await knex("user").del();
 
-  // Inserts seed entries
-  await knex("users").insert([
+  await knex("user").insert([
     {
       first_name: "Stephen",
       last_name: "Scholtz",
       email: "scholtz.gnome@gmail.com",
-      password: null,
       role: "admin",
-      verified: true,
     },
   ]);
 }
