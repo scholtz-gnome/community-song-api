@@ -6,11 +6,7 @@ import profileRouter from "./routes/profileRouter";
 export function newApp(): Express {
   const app = express();
 
-  app.use(
-    cors({
-      origin: "https://community-song.herokuapp.com",
-    })
-  );
+  app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
