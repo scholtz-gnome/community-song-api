@@ -2,24 +2,12 @@ import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { config } from "../../config";
 import aws from "aws-sdk";
+import db from "../../db/db.connection";
 
 export const getSongs = async (req: Request, res: Response) => {
   try {
-    const s3 = new aws.S3();
-
-    s3.listObjects(
-      {
-        Bucket: "community-song-pdfs",
-      },
-      (err, data) => {
-        try {
-          res.status(200).json({ data });
-        } catch (error) {
-          console.log("Error from S3: " + err);
-          console.log("Error from server: " + error);
-        }
-      }
-    );
+    const dbData = await db.select("*").from("file");
+    return res.status(200).json(dbData);
   } catch (err) {
     console.log(err);
   }
@@ -32,6 +20,9 @@ export const postSong = async (req: Request, res: Response) => {
       .json({ success: false, message: "No file uploaded" });
   }
 
+  const userId = Number(req.body.id);
+  const title = req.body.title;
+  const artist = req.body.artist;
   const song = req.files.file as UploadedFile;
 
   if (song.size > config.MAX_FILE_SIZE) {
@@ -44,6 +35,13 @@ export const postSong = async (req: Request, res: Response) => {
     song.mimetype === "application/pdf"
   ) {
     try {
+      await db("file").insert({
+        title,
+        artist,
+        url: song.name,
+        user_id: userId,
+      });
+
       const s3 = new aws.S3();
 
       s3.upload(
@@ -56,14 +54,14 @@ export const postSong = async (req: Request, res: Response) => {
           if (err) {
             res.status(500).json({
               success: false,
-              message: `There was an error uploading "${req.body.title}". Our fault!`,
+              message: `There was an error uploading "${title}". Our fault!`,
             });
             console.log("Error from S3: " + err);
           } else {
             res.status(200).json({
               data,
               success: true,
-              message: `File "${req.body.title}" uploaded successfully`,
+              message: `File "${title}" uploaded successfully`,
             });
           }
         }

@@ -1,12 +1,12 @@
+import { config } from "./config";
+import pg from "pg";
+
+pg.defaults.ssl = true;
+
 module.exports = {
   test: {
     client: "pg",
-    connection: {
-      host: "localhost",
-      user: "postgres",
-      password: "admin",
-      database: "comm_song_test",
-    },
+    connection: config.HEROKU_POSTGRESQL_WHITE_URL,
     migrations: {
       directory: __dirname + "/db/migrations",
     },
@@ -17,12 +17,7 @@ module.exports = {
 
   development: {
     client: "pg",
-    connection: {
-      host: "localhost",
-      user: "postgres",
-      password: "admin",
-      database: "comm_song_dev",
-    },
+    connection: config.HEROKU_POSTGRESQL_YELLOW_URL,
     migrations: {
       directory: "./db/migrations",
     },
@@ -33,12 +28,7 @@ module.exports = {
 
   production: {
     client: "pg",
-    connection: {
-      host: "localhost",
-      user: "postgres",
-      password: "admin",
-      database: "comm_song",
-    },
+    connection: config.DATABASE_URL,
     migrations: {
       directory: "./db/migrations",
     },
