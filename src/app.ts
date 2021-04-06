@@ -8,7 +8,7 @@ export function newApp(): Express {
 
   app.use(
     cors({
-      origin: "https://community-song.herokuapp.com/profile/login",
+      origin: "https://community-song.herokuapp.com",
     })
   );
   app.use(express.json());
