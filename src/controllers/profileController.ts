@@ -18,8 +18,12 @@ export const postLogin = async (req: Request, res: Response) => {
   const { given_name, family_name, email, picture } = req.body;
 
   try {
-    const userExists = await db.select("id").from("user").where("email", email);
-    if (!userExists) {
+    const [userExists] = await db
+      .select("id")
+      .from("user")
+      .where("email", email);
+
+    if (userExists === undefined) {
       await db("user").insert({
         first_name: given_name,
         last_name: family_name,
@@ -29,7 +33,7 @@ export const postLogin = async (req: Request, res: Response) => {
       return res.status(200);
     }
 
-    return res.status(304);
+    return res.status(304).json({ message: "Already logged in." });
   } catch (err) {
     console.log(err);
   }
