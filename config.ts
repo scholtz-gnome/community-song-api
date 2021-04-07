@@ -9,11 +9,12 @@ interface Config {
   DATABASE_URL: string | undefined;
   HEROKU_POSTGRESQL_YELLOW_URL: string | undefined;
   HEROKU_POSTGRESQL_WHITE_URL: string | undefined;
-  AUTH_SECRET: string | undefined;
-  CLIENT_ID: string | undefined;
+  GOOGLE_CLIENT_SECRET: string | undefined;
+  GOOGLE_CLIENT_ID: string | undefined;
+  COOKIE_KEY: string | undefined;
 }
 
-export const config: Config = {
+const config: Config = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV || "test",
   MAX_FILE_SIZE: 10 * 1024 * 1024,
@@ -25,6 +26,9 @@ export const config: Config = {
   DATABASE_URL: process.env.DATABASE_URL,
   HEROKU_POSTGRESQL_YELLOW_URL: process.env.HEROKU_POSTGRESQL_YELLOW_URL,
   HEROKU_POSTGRESQL_WHITE_URL: process.env.HEROKU_POSTGRESQL_WHITE_URL,
-  AUTH_SECRET: process.env.AUTH_SECRET,
-  CLIENT_ID: process.env.CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  COOKIE_KEY: process.env.COOKIE_KEY,
 };
+
+export default config;

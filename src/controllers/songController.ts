@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import { config } from "../../config";
+import config from "../../config";
 import aws from "aws-sdk";
 import db from "../../db/db.connection";
 

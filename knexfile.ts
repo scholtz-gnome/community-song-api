@@ -1,4 +1,4 @@
-import { config } from "./config";
+import config from "./config";
 import pg from "pg";
 
 pg.defaults.ssl = true;

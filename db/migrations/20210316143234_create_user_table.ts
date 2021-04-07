@@ -10,6 +10,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string("role").notNullable().defaultTo("guest");
     table.boolean("verified").defaultTo(false);
     table.string("profile_pic").defaultTo(null);
+    table.string("identity_provider").defaultTo(null);
+    table.string("idp_id").unique().defaultTo(null);
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
