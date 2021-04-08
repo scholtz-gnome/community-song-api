@@ -20,7 +20,7 @@ const google = new GoogleStrategy.Strategy(
   },
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
-      console.log(refreshToken);
+      // console.log(refreshToken);
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
 

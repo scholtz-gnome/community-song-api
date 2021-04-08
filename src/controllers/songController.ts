@@ -5,6 +5,9 @@ import aws from "aws-sdk";
 import db from "../../db/db.connection";
 
 export const getSongs = async (req: Request, res: Response) => {
+  // @ts-ignore
+  console.log(req._passport);
+  console.log(req.user);
   try {
     const dbData = await db("file")
       .select("title", "artist", "url", "first_name")
