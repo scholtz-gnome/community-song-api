@@ -16,11 +16,11 @@ const google = new GoogleStrategy.Strategy(
   {
     clientID: config.GOOGLE_CLIENT_ID || "",
     clientSecret: config.GOOGLE_CLIENT_SECRET || "",
-    callbackURL: "/auth/google/redirect",
+    callbackURL: `${config.API_ROOT_URL}/auth/google/redirect`,
   },
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
-      console.log(accessToken);
+      console.log(refreshToken);
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
 
@@ -35,10 +35,10 @@ const google = new GoogleStrategy.Strategy(
           identity_provider: provider,
           idp_id: id,
         });
-        console.log(newUser);
+        console.log(`NEW USER: ${newUser}`);
         done(null, newUser);
       } else {
-        console.log(selectedUser);
+        console.log(`EXISTING USER: ${selectedUser}`);
         done(null, selectedUser);
       }
     } catch (err) {
