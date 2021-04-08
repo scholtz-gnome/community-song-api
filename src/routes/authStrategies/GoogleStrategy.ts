@@ -20,6 +20,7 @@ const google = new GoogleStrategy.Strategy(
   },
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
+      console.log(accessToken);
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
 
@@ -34,9 +35,10 @@ const google = new GoogleStrategy.Strategy(
           identity_provider: provider,
           idp_id: id,
         });
-
+        console.log(newUser);
         done(null, newUser);
       } else {
+        console.log(selectedUser);
         done(null, selectedUser);
       }
     } catch (err) {
