@@ -19,14 +19,14 @@ export function newApp(): Express {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(
     cookieSession({
       maxAge: 24 * 60 * 60 * 1000,
       keys: [config.COOKIE_KEY || ""],
     })
   );
-  app.use(passport.initialize());
-  app.use(passport.session());
 
   app.use("/songs", songRouter);
   app.use("/profile", profileRouter);
