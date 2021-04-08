@@ -12,6 +12,7 @@ interface Config {
   GOOGLE_CLIENT_SECRET: string | undefined;
   GOOGLE_CLIENT_ID: string | undefined;
   COOKIE_KEY: string | undefined;
+  APP_URL_ROOT: string | undefined;
 }
 
 const config: Config = {
@@ -29,6 +30,7 @@ const config: Config = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   COOKIE_KEY: process.env.COOKIE_KEY,
+  APP_URL_ROOT: process.env.APP_URL_ROOT,
 };
 
 export default config;
