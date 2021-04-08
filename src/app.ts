@@ -1,4 +1,4 @@
-import express, { Request, Response, Express } from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import passport from "passport";
 import cookieSession from "cookie-session";
@@ -12,10 +12,7 @@ export function newApp(): Express {
 
   app.use(
     cors({
-      origin: [
-        "http://localhost:3000",
-        "https://community-song.herokuapp.com/",
-      ],
+      origin: ["http://localhost:3000", "https://community-song.herokuapp.com"],
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
     })
