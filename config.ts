@@ -14,6 +14,7 @@ interface Config {
   COOKIE_KEY: string | undefined;
   APP_URL_ROOT: string | undefined;
   API_ROOT_URL: string | undefined;
+  JWT_SECRET: string | undefined;
 }
 
 const config: Config = {
@@ -33,6 +34,7 @@ const config: Config = {
   COOKIE_KEY: process.env.COOKIE_KEY,
   APP_URL_ROOT: process.env.APP_URL_ROOT,
   API_ROOT_URL: process.env.API_ROOT_URL,
+  JWT_SECRET: process.env.JWT_SECRET,
 };
 
 export default config;

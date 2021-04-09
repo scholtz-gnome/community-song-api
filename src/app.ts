@@ -6,6 +6,8 @@ import config from "../config";
 import songRouter from "./routes/songRouter";
 import profileRouter from "./routes/profileRouter";
 import authRouter from "./routes/authRouter";
+import { checkUser } from "./middleware/authMiddleware";
+import cookieParser from "cookie-parser";
 
 export function newApp(): Express {
   const app = express();
@@ -19,14 +21,17 @@ export function newApp(): Express {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(
-    cookieSession({
-      maxAge: 24 * 60 * 60 * 1000,
-      keys: [config.COOKIE_KEY || ""],
-    })
-  );
+  app.use(cookieParser());
+  app.use(checkUser);
+  // app.use(
+  //   cookieSession({
+  //     maxAge: 24 * 60 * 60 * 1000,
+  //     keys: [config.COOKIE_KEY || ""],
+  //     secure: true,
+  //   })
+  // );
   app.use(passport.initialize());
-  app.use(passport.session());
+  // app.use(passport.session());
 
   app.use("/songs", songRouter);
   app.use("/profile", profileRouter);

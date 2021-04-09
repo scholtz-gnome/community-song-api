@@ -20,10 +20,8 @@ const google = new GoogleStrategy.Strategy(
   },
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
-      // console.log(refreshToken);
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
-
       const [selectedUser] = await db.select().from("user").where("idp_id", id);
 
       if (!selectedUser) {
@@ -35,10 +33,8 @@ const google = new GoogleStrategy.Strategy(
           identity_provider: provider,
           idp_id: id,
         });
-        console.log(`NEW USER: ${newUser}`);
         done(null, newUser);
       } else {
-        console.log(`EXISTING USER: ${selectedUser}`);
         done(null, selectedUser);
       }
     } catch (err) {
