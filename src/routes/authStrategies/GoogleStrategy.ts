@@ -33,8 +33,10 @@ const google = new GoogleStrategy.Strategy(
           identity_provider: provider,
           idp_id: id,
         });
+        console.log("GoogleStrategy - newUser => ", newUser);
         done(null, newUser);
       } else {
+        console.log("GoogleStrategy - selectedUser => ", selectedUser);
         done(null, selectedUser);
       }
     } catch (err) {
