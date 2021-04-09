@@ -13,6 +13,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
   const token = createToken(user.id);
   res.cookie("jwt", token, {
+    httpOnly: true,
     maxAge: maxAge * 1000,
   });
   res.redirect(`${config.APP_URL_ROOT}`);
