@@ -4,8 +4,6 @@ import db from "../../db/db.connection";
 import { Request, Response, NextFunction } from "express";
 
 export const checkUser = (req: Request, res: Response, next: NextFunction) => {
-  const cookieHeader = res.getHeader("Set-Cookie");
-  console.log("checkUser = cookieHeader => ", cookieHeader);
   const token = req.cookies.jwt;
   if (token) {
     jwt.verify(
