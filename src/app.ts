@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 export function newApp(): Express {
   const app = express();
 
+  app.set("trust proxy", 1);
   app.use(
     cors({
       origin: [`${config.APP_URL_ROOT}`],
