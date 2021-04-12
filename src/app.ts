@@ -21,6 +21,7 @@ export function newApp(): Express {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(passport.initialize());
   app.use(cookieParser());
   app.use(checkUser);
   // app.use(
@@ -30,7 +31,6 @@ export function newApp(): Express {
   //     secure: true,
   //   })
   // );
-  app.use(passport.initialize());
   // app.use(passport.session());
 
   app.use("/songs", songRouter);
