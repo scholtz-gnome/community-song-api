@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const maxAge = 24 * 60 * 60;
 const createToken = (id: number) => {
-  return jwt.sign({ id }, config.JWT_SECRET || "", {
+  return jwt.sign({ id }, "blablablbaa487654w" || "", {
     expiresIn: maxAge,
   });
 };
@@ -16,6 +16,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
   //   httpOnly: true,
   //   maxAge: maxAge * 1000,
   // });
+  console.log("getGoogleRedirect => ", user);
   res
     .cookie("jwt", token, {
       httpOnly: true,
