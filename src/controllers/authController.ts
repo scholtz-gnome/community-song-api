@@ -24,6 +24,6 @@ export const getUserDetails = (req: Request, res: Response) => {
   res.status(200).json(req.user);
 };
 
-export const getLogout = (req: Request, res: Response) => {
+export const getLogout = (_: Request, res: Response) => {
   res.cookie("jwt", "", { maxAge: 1 }).redirect(`${config.APP_URL_ROOT}`);
 };
