@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 const maxAge = 24 * 60 * 60;
 const createToken = (id: number) => {
+  console.log("createToken => ", config.JWT_SECRET);
   return jwt.sign({ id }, config.JWT_SECRET || "", {
     expiresIn: maxAge,
   });
