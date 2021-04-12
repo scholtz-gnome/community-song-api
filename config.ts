@@ -11,7 +11,6 @@ interface Config {
   HEROKU_POSTGRESQL_WHITE_URL: string | undefined;
   GOOGLE_CLIENT_SECRET: string | undefined;
   GOOGLE_CLIENT_ID: string | undefined;
-  COOKIE_KEY: string | undefined;
   APP_URL_ROOT: string | undefined;
   API_ROOT_URL: string | undefined;
   JWT_SECRET: string | undefined;
@@ -31,7 +30,6 @@ const config: Config = {
   HEROKU_POSTGRESQL_WHITE_URL: process.env.HEROKU_POSTGRESQL_WHITE_URL,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  COOKIE_KEY: process.env.COOKIE_KEY,
   APP_URL_ROOT: process.env.APP_URL_ROOT,
   API_ROOT_URL: process.env.API_ROOT_URL,
   JWT_SECRET: process.env.JWT_SECRET,
