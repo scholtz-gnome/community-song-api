@@ -11,7 +11,6 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
       config.JWT_SECRET || "",
       async (err: any, decodedToken: any) => {
         if (err) {
-          res.locals.user = null;
           console.log(err);
           next();
         } else {
