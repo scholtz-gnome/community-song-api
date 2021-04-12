@@ -1,7 +1,6 @@
 import express, { Express } from "express";
 import cors from "cors";
 import passport from "passport";
-import cookieSession from "cookie-session";
 import config from "../config";
 import songRouter from "./routes/songRouter";
 import profileRouter from "./routes/profileRouter";
@@ -24,14 +23,6 @@ export function newApp(): Express {
   app.use(passport.initialize());
   app.use(cookieParser());
   app.use(checkUser);
-  // app.use(
-  //   cookieSession({
-  //     maxAge: 24 * 60 * 60 * 1000,
-  //     keys: [config.COOKIE_KEY || ""],
-  //     secure: true,
-  //   })
-  // );
-  // app.use(passport.session());
 
   app.use("/songs", songRouter);
   app.use("/profile", profileRouter);
