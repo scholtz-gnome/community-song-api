@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import config from "../../config";
 import jwt from "jsonwebtoken";
-
+const tokenSecret =
+  "KVVOdaPZ0pYaLjIYZnWd94bt4pEfQ14NE9K5TEDsaVhbkab8dHHlfI3EYFC4XnUk";
 const maxAge = 24 * 60 * 60;
 const createToken = (id: number) => {
-  // @ts-ignore
-  return jwt.sign({ id }, config.JWT_SECRET, {
+  return jwt.sign({ id }, tokenSecret, {
     expiresIn: maxAge,
   });
 };
