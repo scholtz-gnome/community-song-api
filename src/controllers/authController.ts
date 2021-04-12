@@ -16,6 +16,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
     httpOnly: true,
     maxAge: maxAge * 1000,
     secure: true,
+    domain: "community-song.herokuapp.com",
   });
   res.redirect(`${config.APP_URL_ROOT}`);
 };
