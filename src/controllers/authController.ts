@@ -25,6 +25,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
+  console.log("getUserDetails => ", req.user);
   res.status(200).json(req.user);
 };
 
