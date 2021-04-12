@@ -12,11 +12,16 @@ const createToken = (id: number) => {
 export const getGoogleRedirect = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
   const token = createToken(user.id);
-  res.cookie("jwt", token, {
-    maxAge: maxAge * 1000,
-    sameSite: false,
-  });
-  res.redirect(`${config.APP_URL_ROOT}`);
+  // res.cookie("jwt", token, {
+  //   httpOnly: true,
+  //   maxAge: maxAge * 1000,
+  // });
+  res
+    .cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+    })
+    .redirect(`${config.APP_URL_ROOT}`);
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
