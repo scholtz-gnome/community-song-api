@@ -15,6 +15,40 @@ export const getSongs = async (req: Request, res: Response) => {
   }
 };
 
+export const getSong = async (req: Request, res: Response) => {
+  try {
+    const [song] = await db("file")
+      .where("file.id", req.params.id)
+      .select("title", "artist", "url", "first_name", "profile_pic")
+      .leftJoin("user", "file.user_id", "user.id");
+
+    const s3 = new aws.S3();
+
+    s3.getObject(
+      {
+        Bucket: "community-song-pdfs",
+        Key: song.url,
+      },
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({ message: "Can't fetch file" });
+        } else {
+          return res.status(200).json({
+            title: song.title,
+            artist: song.artist,
+            first_name: song.first_name,
+            profile_pic: song.profile_pic,
+            file: data.Body?.toString("base64"),
+          });
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const postSong = async (req: Request, res: Response) => {
   let user: any | undefined = req.user;
 
