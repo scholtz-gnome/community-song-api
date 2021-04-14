@@ -16,7 +16,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
     .cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      domain: "community-song",
+      domain: "community-song.herokuapp.com",
     })
     .redirect(`${config.APP_URL_ROOT}`);
 };
