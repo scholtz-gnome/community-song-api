@@ -34,6 +34,7 @@ export const getUserDetails = (req: Request, res: Response) => {
     .cookie("test cookie", "this test is in getUserDetails", {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "none",
     })
     .json(req.user);
 };
