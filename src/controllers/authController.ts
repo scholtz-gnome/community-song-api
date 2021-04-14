@@ -4,9 +4,20 @@ import jwt from "jsonwebtoken";
 
 const maxAge = 24 * 60 * 60;
 const createToken = (id: number) => {
-  return jwt.sign({ id }, config.JWT_SECRET || "", {
-    expiresIn: maxAge,
-  });
+  return jwt.sign(
+    { id },
+    config.JWT_SECRET || "",
+    {
+      expiresIn: maxAge,
+    },
+    (err, token) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(token);
+      }
+    }
+  );
 };
 
 export const getGoogleRedirect = (req: Request, res: Response) => {
