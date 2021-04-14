@@ -16,7 +16,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
     .cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      domain: "http://ec2-52-56-183-177.eu-west-2.compute.amazonaws.com:4000",
+      domain: "community-song",
     })
     .redirect(`${config.APP_URL_ROOT}`);
 };
