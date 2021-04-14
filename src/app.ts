@@ -6,10 +6,12 @@ import songRouter from "./routes/songRouter";
 import authRouter from "./routes/authRouter";
 import { checkUser } from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 
 export function newApp(): Express {
   const app = express();
 
+  app.use(compression());
   app.use(
     cors({
       origin: [`${config.APP_URL_ROOT}`],

@@ -17,6 +17,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
         console.log(err);
       } else {
         res
+          .status(200)
           .cookie("jwt", token, {
             httpOnly: true,
             maxAge: maxAge * 1000,
@@ -30,15 +31,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
-  res
-    .status(200)
-    .cookie("test cookie", "this test is in getUserDetails", {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      secure: true,
-    })
-    .json(req.user);
+  res.status(200).json(req.user);
 };
 
 export const getLogout = (_: Request, res: Response) => {

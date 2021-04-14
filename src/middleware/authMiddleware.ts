@@ -16,13 +16,11 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
         } else {
           let [user] = await db("user").select().where("id", decodedToken.id);
           req.user = user;
-          console.log("req.user set: ", user);
           next();
         }
       }
     );
   } else {
-    console.log("checkUser error: No token");
     next();
   }
 };
