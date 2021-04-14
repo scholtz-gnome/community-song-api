@@ -23,6 +23,7 @@ const createToken = (id: number) => {
 export const getGoogleRedirect = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
   const token = createToken(user.id);
+  console.log(token);
   res
     .cookie("jwt", token, {
       httpOnly: true,
