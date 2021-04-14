@@ -15,7 +15,7 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
           next();
         } else {
           let [user] = await db("user").select().where("id", decodedToken.id);
-          req.user = user;
+          res.setHeader("Authorization", `Bearer: ${token}`);
           next();
         }
       }
