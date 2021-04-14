@@ -21,6 +21,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             httpOnly: true,
             maxAge: maxAge * 1000,
             sameSite: "none",
+            secure: true,
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
@@ -35,6 +36,7 @@ export const getUserDetails = (req: Request, res: Response) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
+      secure: true,
     })
     .json(req.user);
 };
