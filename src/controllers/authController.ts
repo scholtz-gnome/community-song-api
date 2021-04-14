@@ -20,6 +20,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
           .cookie("jwt", token, {
             httpOnly: true,
             maxAge: maxAge * 1000,
+            sameSite: "none",
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
