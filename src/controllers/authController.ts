@@ -16,13 +16,12 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
     .cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      domain: "herokuapp",
-      secure: true,
     })
     .redirect(`${config.APP_URL_ROOT}`);
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
+  console.log("getUserDetails => ", req.user);
   res.status(200).json(req.user);
 };
 
