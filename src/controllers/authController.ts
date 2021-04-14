@@ -22,7 +22,7 @@ const createToken = (id: number) => {
 
 export const getGoogleRedirect = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
-  const token = createToken(user.id);
+  // const token = createToken(user.id);
   const id = user.id;
   jwt.sign(
     { id },
@@ -34,6 +34,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
       if (err) {
         console.log(err);
       } else {
+        console.log("getGoogleRedirect token => ", token);
         res
           .cookie("jwt", token, {
             httpOnly: true,
@@ -43,7 +44,6 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
       }
     }
   );
-  console.log("getGoogleRedirect token => ", token);
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
