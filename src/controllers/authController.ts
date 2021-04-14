@@ -23,13 +23,27 @@ const createToken = (id: number) => {
 export const getGoogleRedirect = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
   const token = createToken(user.id);
+  const id = user.id;
+  jwt.sign(
+    { id },
+    config.JWT_SECRET || "",
+    {
+      expiresIn: maxAge,
+    },
+    (err, token) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res
+          .cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000,
+          })
+          .redirect(`${config.APP_URL_ROOT}`);
+      }
+    }
+  );
   console.log("getGoogleRedirect token => ", token);
-  res
-    .cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000,
-    })
-    .redirect(`${config.APP_URL_ROOT}`);
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
