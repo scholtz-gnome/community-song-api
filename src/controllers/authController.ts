@@ -16,7 +16,6 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
       if (err) {
         console.log(err);
       } else {
-        console.log("getGoogleRedirect token => ", token);
         res
           .cookie("jwt", token, {
             httpOnly: true,
