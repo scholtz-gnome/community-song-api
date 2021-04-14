@@ -16,6 +16,10 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
         } else {
           let [user] = await db("user").select().where("id", decodedToken.id);
           req.user = user;
+          res.cookie("test", "all the test data, my brother", {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+          });
           console.log("req.user set: ", user);
           next();
         }
