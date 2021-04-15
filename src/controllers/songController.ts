@@ -7,7 +7,7 @@ import db from "../../db/db.connection";
 export const getSongs = async (req: Request, res: Response) => {
   try {
     const dbData = await db("file")
-      .select("title", "artist", "url", "first_name")
+      .select("title", "artist", "url", "first_name", "email")
       .leftJoin("user", "file.user_id", "user.id");
     return res.status(200).json(dbData);
   } catch (err) {
