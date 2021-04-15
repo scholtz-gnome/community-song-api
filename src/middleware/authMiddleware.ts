@@ -14,7 +14,17 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
           console.log(err);
           next();
         } else {
-          let [user] = await db("user").select().where("id", decodedToken.id);
+          let [user] = await db("user")
+            .select(
+              "id",
+              "first_name",
+              "last_name",
+              "email",
+              "role",
+              "profile_pic",
+              "created_at"
+            )
+            .where("id", decodedToken.id);
           req.user = user;
           next();
         }

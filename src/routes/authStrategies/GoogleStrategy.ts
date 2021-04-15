@@ -3,11 +3,11 @@ import GoogleStrategy from "passport-google-oauth20";
 import config from "../../../config";
 import db from "../../../db/db.connection";
 
-passport.serializeUser((user: any, done) => {
+passport.serializeUser((user: any, done: Function) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id: number, done: Function) => {
   const [user] = await db("user").select().where("id", id);
   done(null, user);
 });
@@ -18,7 +18,7 @@ const google = new GoogleStrategy.Strategy(
     clientSecret: config.GOOGLE_CLIENT_SECRET || "",
     callbackURL: `${config.API_ROOT_URL}/auth/google/redirect`,
   },
-  async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+  async (accessToken: any, refreshToken: any, profile: any, done: Function) => {
     try {
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
