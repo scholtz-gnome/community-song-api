@@ -7,9 +7,23 @@ import db from "../../db/db.connection";
 export const getSongs = async (req: Request, res: Response) => {
   try {
     const dbData = await db("file")
-      .select("title", "artist", "url", "first_name", "email")
+      .select("title", "artist", "url", "first_name", "email", "file.id")
       .leftJoin("user", "file.user_id", "user.id");
     return res.status(200).json(dbData);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getProfileSongs = async (req: Request, res: Response) => {
+  const userEmail = req.params.email;
+  try {
+    const allSongs = await db("file")
+      .select("title", "artist", "url", "first_name", "email", "file.id")
+      .leftJoin("user", "file.user_id", "user.id");
+
+    const userSongs = allSongs.filter((song) => song.email === userEmail);
+    res.status(200).json(userSongs);
   } catch (err) {
     console.log(err);
   }
@@ -44,6 +58,41 @@ export const getSong = async (req: Request, res: Response) => {
         }
       }
     );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+interface DeletedSong {
+  id: number;
+  title: string;
+  url: string;
+}
+
+export const deleteSong = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const [deletedSong]: DeletedSong[] = await db("file")
+      .returning(["id", "title", "url"])
+      .where("id", id)
+      .del();
+
+    const s3 = new aws.S3();
+
+    s3.deleteObject(
+      {
+        Bucket: "community-song-pdfs",
+        Key: deletedSong.url,
+      },
+      (err, data) =>
+        err
+          ? console.log(err)
+          : console.log(
+              `${deletedSong.url} deleted from community-song-pdfs bucket`
+            )
+    );
+
+    res.status(200).json(deletedSong);
   } catch (err) {
     console.log(err);
   }
