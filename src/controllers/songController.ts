@@ -33,7 +33,7 @@ export const getSong = async (req: Request, res: Response) => {
   try {
     const [song] = await db("file")
       .where("file.id", req.params.id)
-      .select("title", "artist", "url", "first_name", "profile_pic")
+      .select("title", "artist", "url", "first_name", "profile_pic", "email")
       .leftJoin("user", "file.user_id", "user.id");
 
     const s3 = new aws.S3();
@@ -52,6 +52,7 @@ export const getSong = async (req: Request, res: Response) => {
               artist: song.artist,
               first_name: song.first_name,
               profile_pic: song.profile_pic,
+              email: song.email,
             });
           }
           console.log(err);
@@ -62,6 +63,7 @@ export const getSong = async (req: Request, res: Response) => {
             artist: song.artist,
             first_name: song.first_name,
             profile_pic: song.profile_pic,
+            email: song.email,
             file: data.Body?.toString("base64"),
           });
         }
