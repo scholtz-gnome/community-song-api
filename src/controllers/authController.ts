@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
 import config from "../../config";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 export const getGoogleRedirect = (req: Request, res: Response) => {
@@ -16,7 +16,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
       if (err) {
         console.log(err);
       } else {
-        res
+        return res
           .status(200)
           .cookie("jwt", token, {
             httpOnly: true,

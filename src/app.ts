@@ -1,7 +1,7 @@
+import config from "../config";
 import express, { Express } from "express";
 import cors from "cors";
 import passport from "passport";
-import config from "../config";
 import songRouter from "./routes/songRouter";
 import authRouter from "./routes/authRouter";
 import { checkUser } from "./middleware/authMiddleware";

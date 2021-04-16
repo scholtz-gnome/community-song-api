@@ -1,70 +1,100 @@
+import config from "../../config";
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import config from "../../config";
 import aws from "aws-sdk";
 import db from "../../db/db.connection";
+import Song from "../interfaces/Song";
+import User from "../interfaces/User";
 
-export const getSongs = async (req: Request, res: Response) => {
+export const getSongs = async (_: Request, res: Response) => {
   try {
-    const dbData = await db("file")
-      .select("title", "artist", "url", "first_name", "email", "file.id")
+    const allSongs: Song[] = await db("file")
+      .select(
+        "title",
+        "artist",
+        "url",
+        "first_name AS firstName",
+        "email",
+        "file.id"
+      )
       .leftJoin("user", "file.user_id", "user.id");
-    return res.status(200).json(dbData);
+    return res.status(200).json(allSongs);
   } catch (err) {
     console.log(err);
   }
 };
 
 export const getProfileSongs = async (req: Request, res: Response) => {
-  const userEmail = req.params.email;
+  const userEmail: string = req.params.email;
   try {
-    const allSongs = await db("file")
-      .select("title", "artist", "url", "first_name", "email", "file.id")
+    const allSongs: Song[] = await db("file")
+      .select(
+        "title",
+        "artist",
+        "url",
+        "first_name AS firstName",
+        "email",
+        "file.id"
+      )
       .leftJoin("user", "file.user_id", "user.id");
 
     const userSongs = allSongs.filter((song) => song.email === userEmail);
-    res.status(200).json(userSongs);
+    return res.status(200).json(userSongs);
   } catch (err) {
     console.log(err);
   }
 };
 
 export const getSong = async (req: Request, res: Response) => {
+  const songId: number = Number(req.params.id);
   try {
-    const [song] = await db("file")
-      .where("file.id", req.params.id)
-      .select("title", "artist", "url", "first_name", "profile_pic", "email")
+    const [{ url, title, artist, firstName, profilePic, email }] = await db(
+      "file"
+    )
+      .where("file.id", songId)
+      .select(
+        "title",
+        "artist",
+        "url",
+        "first_name AS firstName",
+        "profile_pic AS profilePic",
+        "email"
+      )
       .leftJoin("user", "file.user_id", "user.id");
+
+    if (url === null) {
+      return res.json({
+        title,
+        artist,
+        firstName,
+        profilePic,
+        email,
+      });
+    }
 
     const s3 = new aws.S3();
 
     s3.getObject(
       {
         Bucket: "community-song-pdfs",
-        Key: song.url,
+        Key: url,
       },
       (err, data) => {
         if (err) {
-          if (err.code === "NoSuchKey") {
-            console.log(err);
-            return res.json({
-              title: song.title,
-              artist: song.artist,
-              first_name: song.first_name,
-              profile_pic: song.profile_pic,
-              email: song.email,
-            });
-          }
           console.log(err);
-          return res.status(500).json({ message: "Can't fetch file" });
+          return res
+            .status(500)
+            .json({ success: false, message: "Can't fetch file" });
         } else {
           return res.status(200).json({
-            title: song.title,
-            artist: song.artist,
-            first_name: song.first_name,
-            profile_pic: song.profile_pic,
-            email: song.email,
+            title,
+            artist,
+            firstName,
+            profilePic,
+            email,
             file: data.Body?.toString("base64"),
+            success: true,
+            message: `Song ${title} retrieved`,
           });
         }
       }
@@ -74,19 +104,20 @@ export const getSong = async (req: Request, res: Response) => {
   }
 };
 
-interface DeletedSong {
-  id: number;
-  title: string;
-  url: string;
-}
-
 export const deleteSong = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const songId = req.params.id;
   try {
-    const [deletedSong]: DeletedSong[] = await db("file")
+    const [deletedSong]: Song[] = await db("file")
       .returning(["id", "title", "url"])
-      .where("id", id)
+      .where("id", songId)
       .del();
+
+    if (deletedSong.url === null) {
+      return res.status(200).json({
+        success: true,
+        message: `${deletedSong.title} deleted from database`,
+      });
+    }
 
     const s3 = new aws.S3();
 
@@ -95,37 +126,48 @@ export const deleteSong = async (req: Request, res: Response) => {
         Bucket: "community-song-pdfs",
         Key: deletedSong.url,
       },
-      (err, data) =>
-        err
-          ? console.log(err)
-          : console.log(
-              `${deletedSong.url} deleted from community-song-pdfs bucket`
-            )
+      (err, data) => {
+        if (err) {
+          console.log(err);
+        } else if (data) {
+          return res.status(200).json({
+            success: true,
+            message: `${deletedSong.title} deleted from database along with ${deletedSong.url}`,
+          });
+        }
+      }
     );
-
-    res.status(200).json(deletedSong);
   } catch (err) {
     console.log(err);
   }
 };
 
 export const postSong = async (req: Request, res: Response) => {
-  let user: any | undefined = req.user;
+  const user = req.user as User;
+  const userId: number = user.id;
+  const title: string = req.body.title;
+  const artist: string = req.body.artist;
 
-  if (req.files === undefined) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No file uploaded" });
+  if (req.files === undefined || req.files === null) {
+    try {
+      await db("file").insert({
+        title,
+        artist,
+        user_id: userId,
+      });
+
+      return res
+        .status(200)
+        .json({ success: true, message: `Song ${title} created` });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Your song couldn't be created, sorry.",
+      });
+    }
   }
 
-  let id: number | null;
-  if (user !== undefined) {
-    id = user.id;
-  } else {
-    id = null;
-  }
-  const title = req.body.title;
-  const artist = req.body.artist;
   const song = req.files.file as UploadedFile;
 
   if (song.size > config.MAX_FILE_SIZE) {
@@ -142,7 +184,7 @@ export const postSong = async (req: Request, res: Response) => {
         title,
         artist,
         url: song.name,
-        user_id: id,
+        user_id: userId,
       });
 
       const s3 = new aws.S3();
@@ -172,22 +214,6 @@ export const postSong = async (req: Request, res: Response) => {
     } catch (err) {
       console.log(err);
     }
-
-    // song.mv(`${config.PROJECT_DIR}${song.name}`, (err) => {
-    //   if (err) {
-    //     return res.status(400).json({
-    //       success: false,
-    //       message: err,
-    //     });
-    //   }
-
-    //   res.status(200).json({
-    //     success: true,
-    //     message: `${song.name} was successfully uploaded`,
-    //     fileName: song.name,
-    //     filePath: `${config.PROJECT_DIR}${song.name}`,
-    //   });
-    // });
   } else {
     return res.status(400).json({
       success: false,
