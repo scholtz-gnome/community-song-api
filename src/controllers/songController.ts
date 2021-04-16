@@ -45,6 +45,15 @@ export const getSong = async (req: Request, res: Response) => {
       },
       (err, data) => {
         if (err) {
+          if (err.code === "NoSuchKey") {
+            console.log(err);
+            return res.json({
+              title: song.title,
+              artist: song.artist,
+              first_name: song.first_name,
+              profile_pic: song.profile_pic,
+            });
+          }
           console.log(err);
           return res.status(500).json({ message: "Can't fetch file" });
         } else {
