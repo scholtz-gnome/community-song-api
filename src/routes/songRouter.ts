@@ -6,6 +6,7 @@ import {
   getProfileSongs,
   postSong,
   deleteSong,
+  deleteFile,
 } from "../controllers/songController";
 
 const songRouter: Router = Router();
@@ -15,6 +16,7 @@ songRouter.get("/:id", getSong);
 songRouter.get("/profileSongs/:email", getProfileSongs);
 songRouter.use(fileUpload());
 songRouter.post("/", postSong);
-songRouter.delete("/:id", deleteSong);
+songRouter.delete("/song/:id", deleteSong);
+songRouter.delete("/file/:id", deleteFile);
 
 export default songRouter;
