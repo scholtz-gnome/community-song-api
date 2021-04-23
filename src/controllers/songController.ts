@@ -48,11 +48,12 @@ export const getProfileSongs = async (req: Request, res: Response) => {
 export const getSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const [{ url, title, artist, firstName, profilePic, email }] = await db(
+    const [{ url, title, artist, firstName, profilePic, email, id }] = await db(
       "file"
     )
       .where("file.id", songId)
       .select(
+        "file.id AS id",
         "title",
         "artist",
         "url",
@@ -64,6 +65,7 @@ export const getSong = async (req: Request, res: Response) => {
 
     if (url === null) {
       return res.json({
+        id,
         title,
         artist,
         firstName,
@@ -81,12 +83,23 @@ export const getSong = async (req: Request, res: Response) => {
       },
       (err, data) => {
         if (err) {
+          if (err.code === "NoSuchKey") {
+            console.log(`Song with Key '${url} not found in S3 Bucket'`);
+            return res.json({
+              title,
+              artist,
+              firstName,
+              profilePic,
+              email,
+            });
+          }
           console.log(err);
           return res
             .status(500)
             .json({ success: false, message: "Can't fetch file" });
         } else {
           return res.status(200).json({
+            id,
             title,
             artist,
             firstName,
@@ -105,7 +118,7 @@ export const getSong = async (req: Request, res: Response) => {
 };
 
 export const deleteSong = async (req: Request, res: Response) => {
-  const songId = req.params.id;
+  const songId: string = req.params.id;
   try {
     const [deletedSong]: Song[] = await db("file")
       .returning(["id", "title", "url"])
@@ -113,9 +126,10 @@ export const deleteSong = async (req: Request, res: Response) => {
       .del();
 
     if (deletedSong.url === null) {
+      console.log(`API: '${deletedSong.title}' deleted from database`);
       return res.status(200).json({
         success: true,
-        message: `${deletedSong.title} deleted from database`,
+        message: `'${deletedSong.title}' deleted from database`,
       });
     }
 
@@ -130,9 +144,47 @@ export const deleteSong = async (req: Request, res: Response) => {
         if (err) {
           console.log(err);
         } else if (data) {
+          console.log(
+            `API: '${deletedSong.title}' deleted from database along with '${deletedSong.url}'`
+          );
           return res.status(200).json({
             success: true,
-            message: `${deletedSong.title} deleted from database along with ${deletedSong.url}`,
+            message: `'${deletedSong.title}' deleted from database along with '${deletedSong.url}'`,
+          });
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const deleteFile = async (req: Request, res: Response) => {
+  const songId = req.params.id;
+  try {
+    const [song]: Song[] = await db("file")
+      .returning(["id", "title", "url"])
+      .where("id", songId);
+
+    const s3 = new aws.S3();
+
+    s3.deleteObject(
+      {
+        Bucket: "community-song-pdfs",
+        Key: song.url || "",
+      },
+      async (err, data) => {
+        if (err) {
+          console.log(err);
+        } else if (data) {
+          await db("file")
+            .returning(["id", "title", "url"])
+            .where("id", songId)
+            .update("url", null);
+          console.log(`API: File '${song.url}' deleted`);
+          return res.status(200).json({
+            success: true,
+            message: `File '${song.url}' deleted`,
           });
         }
       }
