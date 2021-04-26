@@ -8,9 +8,6 @@ module.exports = {
       user: "test",
       password: "test",
       database: "test",
-      ssl: {
-        rejectUnauthorized: false,
-      },
     },
     migrations: {
       directory: __dirname + "/db/migrations",
