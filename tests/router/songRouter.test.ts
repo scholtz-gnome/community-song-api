@@ -10,7 +10,7 @@ describe("songRouter", () => {
   app.use("/songs", songRouter);
 
   beforeAll(async () => {
-    jest.setTimeout(40000);
+    jest.setTimeout(15000);
     await db.migrate.latest();
   });
 

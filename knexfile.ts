@@ -4,7 +4,10 @@ module.exports = {
   test: {
     client: "pg",
     connection: {
-      connectionString: config.HEROKU_POSTGRESQL_WHITE_URL,
+      host: "localhost",
+      user: "test",
+      password: "test",
+      database: "test",
       ssl: {
         rejectUnauthorized: false,
       },
