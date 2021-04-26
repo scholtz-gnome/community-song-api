@@ -4,6 +4,22 @@ module.exports = {
   test: {
     client: "pg",
     connection: {
+      connectionString: config.HEROKU_POSTGRESQL_WHITE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+    migrations: {
+      directory: __dirname + "/db/migrations",
+    },
+    seeds: {
+      directory: __dirname + "/db/seeds",
+    },
+  },
+
+  githubTest: {
+    client: "pg",
+    connection: {
       host: "localhost",
       user: "test",
       password: "test",
