@@ -38,6 +38,6 @@ jobs:
           postgresql user: test
           postgresql password: test
 
-      - run: npm test
+      - run: npm githubTest
         env:
           NODE_ENV: githubTest
