@@ -40,11 +40,21 @@ describe("songRouter", () => {
       });
     });
 
-    // describe("When a file is attached", () => {
-    //   it("responds with status code: 200, success: true, message: 'Song Nocturne in Eb created'", async () => {
-    //     // s3 bucket stuff here
-    //   });
-    // });
+    describe("When a file is attached", () => {
+      it("responds with status code: 200, success: true, message: 'Song Nocturne in Eb created'", async () => {
+        const res = await request(app)
+          .post(path)
+          .field({ title: "Nocturne in Eb" })
+          .field({ artist: "Frédéric Chopin" })
+          .attach(
+            "file",
+            `${__dirname}/Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf`,
+            "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf"
+          );
+
+        expect(res.status).toBe(200);
+      });
+    });
   });
 
   describe("GET", () => {
@@ -62,6 +72,14 @@ describe("songRouter", () => {
             firstName: null,
             id: 1,
             url: null,
+          },
+          {
+            title: "Nocturne in Eb",
+            artist: "Frédéric Chopin",
+            email: null,
+            firstName: null,
+            id: 2,
+            url: "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf",
           },
         ]);
         expect(res.status).toBe(200);
