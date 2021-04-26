@@ -3,6 +3,7 @@
 
 name: API Tests
 env:
+  NODE_ENV: test
   HEROKU_POSTGRESQL_WHITE_URL: ${{ secrets.HEROKU_POSTGRESQL_WHITE_URL }}
 
 on:
