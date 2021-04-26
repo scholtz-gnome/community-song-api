@@ -10,23 +10,29 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: test
-      HEROKU_POSTGRESQL_WHITE_URL: ${{ secrets.HEROKU_POSTGRESQL_WHITE_URL }}
-  
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    NODE_ENV: test
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+      
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+
     - run: npm run build --if-present
+    
+    - name: Setup PostgreSQL
+      uses: harmon758/postgresql-action@v1.0.0
+      with:
+        postgresql version: 11
+        postgresql db: test
+        postgresql user: test
+        postgresql password: test
+    
     - run: npm test
