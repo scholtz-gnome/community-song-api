@@ -6,6 +6,7 @@ import db from "../../db/db.connection";
 describe("songRouter", () => {
   const path: string = "/songs";
   const app: Express = express();
+
   app.use("/songs", songRouter);
 
   beforeAll(async () => {
@@ -13,14 +14,58 @@ describe("songRouter", () => {
     await db.migrate.latest();
   });
 
-  describe("POST", () => {
-    test("/songs posts a song and responds with 200 status code and song name", async () => {
-      const res = await request(app).post(path).send({
-        title: "Octavarium",
-        artist: "Dream Theater",
-      });
+  describe("GET", () => {
+    describe("When there are no songs in the database", () => {
+      it("responds with status code: 200, success: true, message: 'All songs retrieved'", async () => {
+        const res = await request(app).get(path);
 
-      expect(res).toBe(200);
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe("All songs retrieved");
+        expect(JSON.parse(res.text).songs).toEqual([]);
+        expect(res.status).toBe(200);
+      });
+    });
+  });
+
+  describe("POST", () => {
+    describe("When no file is attached", () => {
+      it("responds with status code: 200, success: true, message: 'Song Octavarium created'", async () => {
+        const res = await request(app)
+          .post(path)
+          .send({ title: "Octavarium", artist: "Dream Theater" });
+
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe("Song Octavarium created");
+        expect(res.status).toBe(200);
+      });
+    });
+
+    // describe("When a file is attached", () => {
+    //   it("responds with status code: 200, success: true, message: 'Song Nocturne in Eb created'", async () => {
+    //     // s3 bucket stuff here
+    //   });
+    // });
+  });
+
+  describe("GET", () => {
+    describe("When all songs are requested", () => {
+      it("responds with status code: 200, success: true, message: 'All songs retrieved'", async () => {
+        const res = await request(app).get(path);
+
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe("All songs retrieved");
+        expect(JSON.parse(res.text).songs).toEqual([
+          {
+            title: "Octavarium",
+            artist: "Dream Theater",
+            email: null,
+            firstName: null,
+            id: 1,
+            url: null,
+          },
+        ]);
+        expect(res.status).toBe(200);
+      });
     });
   });
 
@@ -30,15 +75,6 @@ describe("songRouter", () => {
   });
 
   // describe("POST", () => {
-  // describe("When no file is attached", () => {
-  //   it("responds with a 400 code", async (done) => {
-  //     const response = await request(app).post(path);
-
-  //     expect(response.status).toEqual(400);
-  //     done();
-  //   });
-  // });
-
   //   describe("When a file with a valid file-type is attached", () => {
   //     const fileType = "pdf";
   //     const fileName = `testFile.${fileType}`;

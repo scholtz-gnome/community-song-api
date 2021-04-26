@@ -18,7 +18,11 @@ export const getSongs = async (_: Request, res: Response) => {
         "file.id"
       )
       .leftJoin("user", "file.user_id", "user.id");
-    return res.status(200).json(allSongs);
+    return res.status(200).json({
+      success: true,
+      message: "All songs retrieved",
+      songs: allSongs,
+    });
   } catch (err) {
     console.log(err);
   }
@@ -195,8 +199,11 @@ export const deleteFile = async (req: Request, res: Response) => {
 };
 
 export const postSong = async (req: Request, res: Response) => {
-  const user = req.user as User;
-  const userId: number = user.id;
+  let userId: number | null = null;
+  if (req.user) {
+    const user = req.user as User;
+    userId = user.id;
+  }
   const title: string = req.body.title;
   const artist: string = req.body.artist;
 
