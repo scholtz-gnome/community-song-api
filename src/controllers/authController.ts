@@ -23,7 +23,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
-            domain: "https://community-song.herokuapp.com",
+            domain: "community-song",
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
