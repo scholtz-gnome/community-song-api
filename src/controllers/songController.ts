@@ -256,11 +256,11 @@ export const postSong = async (req: Request, res: Response) => {
         },
         (err, data) => {
           if (err) {
+            console.log("Error from S3: " + err);
             res.status(500).json({
               success: false,
               message: `There was an error uploading "${title}". Our fault!`,
             });
-            console.log("Error from S3: " + err);
           } else {
             res.status(200).json({
               data,
