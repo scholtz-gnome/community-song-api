@@ -14,6 +14,11 @@ describe("songRouter", () => {
     await db.migrate.latest();
   });
 
+  afterAll(async () => {
+    await db.migrate.rollback();
+    await db.destroy();
+  });
+
   describe("GET", () => {
     describe("When there are no songs in the database", () => {
       it("responds with status code: 200, success: true, message: 'All songs retrieved'", async () => {
@@ -79,6 +84,22 @@ describe("songRouter", () => {
         expect(res.status).toBe(413);
       });
     });
+
+    describe("When a file is not in .pdf or .txt format", () => {
+      it("responds with status code: 400, success: false, message: 'Wrong file type. Must be .pdf or .txt'", async () => {
+        const res = await request(app)
+          .post(path)
+          .field({ title: "Can I do HTML" })
+          .field({ artist: "HTML Man" })
+          .attach("file", `${__dirname}/test.html`, "test.html");
+
+        expect(JSON.parse(res.text).success).toBe(false);
+        expect(JSON.parse(res.text).message).toBe(
+          "Wrong file type. Must be .pdf or .txt"
+        );
+        expect(res.status).toBe(400);
+      });
+    });
   });
 
   describe("GET", () => {
@@ -110,50 +131,4 @@ describe("songRouter", () => {
       });
     });
   });
-
-  afterAll(async () => {
-    await db.migrate.rollback();
-    await db.destroy();
-  });
-
-  // describe("POST", () => {
-  //   describe("When a file with a valid file-type is attached", () => {
-  //     const fileType = "pdf";
-  //     const fileName = `testFile.${fileType}`;
-
-  //     describe("When the file is smaller than the upper limit", () => {
-  //       it("responds with a 200 code", async (done) => {
-  //         const fileBuffer = Buffer.alloc(5, 1, "utf-8");
-
-  //         const response = await request(app)
-  //           .post(path)
-  //           .field({ title: `${fileName}` })
-  //           .attach("file", fileBuffer, fileName);
-
-  //         expect(response.body.message).toBe(
-  //           `File "${fileName}" uploaded successfully`
-  //         );
-  //         expect(response.status).toEqual(200);
-  //         done();
-  //       });
-  //     });
-
-  //     describe("When the file is larger than the upper limit", () => {
-  //       it("responds with a 413 code", async (done) => {
-  //         const ELEVEN_ONE_MEGABYTES = 11 * 1024 * 1024;
-  //         const fileBuffer = Buffer.alloc(ELEVEN_ONE_MEGABYTES, 1, "utf-8");
-
-  //         const response = await request(app)
-  //           .post(path)
-  //           .attach("file", fileBuffer, fileName);
-
-  //         expect(response.status).toEqual(413);
-  //         expect(response.body.message).toBe(
-  //           "File size exceeded. Cannot exceed 10MB."
-  //         );
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
 });
