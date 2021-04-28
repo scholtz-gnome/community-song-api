@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 interface Config {
-  PORT: string | undefined;
+  PORT: string;
   NODE_ENV: string;
   MAX_FILE_SIZE: number;
   aws: { accessKey: string | undefined; secretAccessKey: string | undefined };
@@ -16,7 +16,7 @@ interface Config {
 }
 
 const config: Config = {
-  PORT: process.env.PORT,
+  PORT: process.env.PORT || "4000",
   NODE_ENV: process.env.NODE_ENV || "test",
   MAX_FILE_SIZE: 10 * 1024 * 1024,
   aws: {
