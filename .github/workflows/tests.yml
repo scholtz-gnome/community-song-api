@@ -16,6 +16,10 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x, 15.x]
+    env:
+        NODE_ENV: githubTest
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
       - name: Checkout
@@ -39,7 +43,3 @@ jobs:
           postgresql password: test
 
       - run: npm run githubTest
-        env:
-          NODE_ENV: githubTest
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
