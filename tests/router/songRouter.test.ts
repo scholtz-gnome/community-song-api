@@ -131,4 +131,30 @@ describe("songRouter", () => {
       });
     });
   });
+
+  describe("DELETE", () => {
+    describe("When a song of given id is deleted", () => {
+      it("responds with status code: 200, success: true, message: ''Octavarium' deleted from database'", async () => {
+        const res = await request(app).delete(`${path}/song/1`);
+
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe(
+          "'Octavarium' deleted from database"
+        );
+        expect(res.status).toBe(200);
+      });
+    });
+
+    describe("When a file of given id is deleted", () => {
+      it("responds with status code: 200, success: true, message: 'File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted'", async () => {
+        const res = await request(app).delete(`${path}/file/2`);
+
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe(
+          "File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted"
+        );
+        expect(res.status).toBe(200);
+      });
+    });
+  });
 });
