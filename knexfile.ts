@@ -4,10 +4,10 @@ module.exports = {
   test: {
     client: "pg",
     connection: {
-      connectionString: config.HEROKU_POSTGRESQL_WHITE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      host: "localhost",
+      user: "postgres",
+      password: "admin",
+      database: "test",
     },
     migrations: {
       directory: __dirname + "/db/migrations",

@@ -7,7 +7,6 @@ interface Config {
   aws: { accessKey: string | undefined; secretAccessKey: string | undefined };
   DATABASE_URL: string | undefined;
   HEROKU_POSTGRESQL_YELLOW_URL: string | undefined;
-  HEROKU_POSTGRESQL_WHITE_URL: string | undefined;
   GOOGLE_CLIENT_SECRET: string | undefined;
   GOOGLE_CLIENT_ID: string | undefined;
   JWT_SECRET: string | undefined;
@@ -25,7 +24,6 @@ const config: Config = {
   },
   DATABASE_URL: process.env.DATABASE_URL,
   HEROKU_POSTGRESQL_YELLOW_URL: process.env.HEROKU_POSTGRESQL_YELLOW_URL,
-  HEROKU_POSTGRESQL_WHITE_URL: process.env.HEROKU_POSTGRESQL_WHITE_URL,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   JWT_SECRET: process.env.JWT_SECRET,
