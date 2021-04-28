@@ -63,6 +63,24 @@ describe("songRouter", () => {
         );
         expect(res.status).toBe(200);
       });
+
+      it("responds with status code: 200, success: true, message: 'Song React Book created'", async () => {
+        const res = await request(app)
+          .post(path)
+          .field({ title: "React Book" })
+          .field({ artist: "Flavio Copes" })
+          .attach(
+            "file",
+            `${__dirname}/react-beginners-handbook.pdf`,
+            "react-beginners-handbook.pdf"
+          );
+
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe(
+          `File "React Book" uploaded successfully`
+        );
+        expect(res.status).toBe(200);
+      });
     });
 
     describe("When a file size exceeds the upper limit", () => {
@@ -126,6 +144,14 @@ describe("songRouter", () => {
             id: 2,
             url: "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf",
           },
+          {
+            title: "React Book",
+            artist: "Flavio Copes",
+            email: null,
+            firstName: null,
+            id: 3,
+            url: "react-beginners-handbook.pdf",
+          },
         ]);
         expect(res.status).toBe(200);
       });
@@ -155,6 +181,18 @@ describe("songRouter", () => {
         );
         expect(res.status).toBe(200);
       });
+    });
+  });
+
+  describe("When a song with a file of given id is deleted", () => {
+    it("responds with status code: 200, success: true, message: ''React Book' deleted from database along with 'react-beginners-handbook.pdf''", async () => {
+      const res = await request(app).delete(`${path}/song/3`);
+
+      expect(JSON.parse(res.text).success).toBe(true);
+      expect(JSON.parse(res.text).message).toBe(
+        "'React Book' deleted from database along with 'react-beginners-handbook.pdf'"
+      );
+      expect(res.status).toBe(200);
     });
   });
 });
