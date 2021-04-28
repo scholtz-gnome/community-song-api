@@ -14,6 +14,7 @@ export function newApp(): Express {
       origin: [`${config.APP_URL_ROOT}`],
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
+      allowedHeaders: ["Sec-Fetch-Site"],
     })
   );
   app.use(express.urlencoded({ extended: true }));
