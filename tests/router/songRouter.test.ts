@@ -52,7 +52,31 @@ describe("songRouter", () => {
             "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf"
           );
 
+        expect(JSON.parse(res.text).success).toBe(true);
+        expect(JSON.parse(res.text).message).toBe(
+          `File "Nocturne in Eb" uploaded successfully`
+        );
         expect(res.status).toBe(200);
+      });
+    });
+
+    describe("When a file size exceeds the upper limit", () => {
+      it("responds with status code: 413, success: false, message: 'File size exceeded. Cannot exceed 10MB.'", async () => {
+        const res = await request(app)
+          .post(path)
+          .field({ title: "Linux Commands" })
+          .field({ artist: "Stephen" })
+          .attach(
+            "file",
+            `${__dirname}/linux-commands-handbook.pdf`,
+            "linux-commands-handbook.pdf"
+          );
+
+        expect(JSON.parse(res.text).success).toBe(false);
+        expect(JSON.parse(res.text).message).toBe(
+          "File size exceeded. Cannot exceed 10MB."
+        );
+        expect(res.status).toBe(413);
       });
     });
   });
