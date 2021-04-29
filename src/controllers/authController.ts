@@ -20,11 +20,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
         return res
           .status(200)
           .cookie("jwt", token, {
-            maxAge: maxAge * 1000,
-            sameSite: "none",
-            secure: true,
-          })
-          .cookie("test-cookie", "testtesttest", {
+            httpOnly: true,
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
@@ -36,14 +32,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
-  res
-    .status(200)
-    .cookie("anothertest", "anotheranother", {
-      maxAge: maxAge * 1000,
-      sameSite: "none",
-      secure: true,
-    })
-    .json(req.user);
+  res.status(200).json(req.user);
 };
 
 export const getLogout = (_: Request, res: Response) => {
