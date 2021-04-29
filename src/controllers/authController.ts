@@ -23,13 +23,11 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
-            signed: true,
           })
           .cookie("test-cookie", "testtesttest", {
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
-            signed: true,
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
@@ -44,7 +42,6 @@ export const getUserDetails = (req: Request, res: Response) => {
       maxAge: maxAge * 1000,
       sameSite: "none",
       secure: true,
-      signed: true,
     })
     .json(req.user);
 };
