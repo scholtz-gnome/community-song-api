@@ -4,6 +4,9 @@ import cors from "cors";
 import songRouter from "./routes/songRouter";
 import authRouter from "./routes/authRouter";
 import compression from "compression";
+import { checkUser } from "./middleware/authMiddleware";
+import cookieParser from "cookie-parser";
+import passport from "passport";
 
 export function newApp(): Express {
   const app = express();
@@ -17,6 +20,10 @@ export function newApp(): Express {
     })
   );
   app.use(express.urlencoded({ extended: true }));
+  authRouter.use(cookieParser());
+  authRouter.use(checkUser);
+  authRouter.use(passport.initialize());
+  authRouter.use(passport.session());
 
   app.use("/songs", songRouter);
   app.use("/auth", authRouter);
