@@ -2,8 +2,9 @@ import config from "../../config";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+const maxAge = 24 * 60 * 60;
+
 export const getGoogleRedirect = (req: Request, res: Response) => {
-  const maxAge = 24 * 60 * 60;
   const user: any | undefined = req.user;
   const id: number = user.id;
   jwt.sign(
@@ -35,7 +36,14 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
 };
 
 export const getUserDetails = (req: Request, res: Response) => {
-  res.status(200).json(req.user);
+  res
+    .status(200)
+    .cookie("anothertest", "anotheranother", {
+      maxAge: maxAge * 1000,
+      sameSite: "none",
+      secure: true,
+    })
+    .json(req.user);
 };
 
 export const getLogout = (_: Request, res: Response) => {
