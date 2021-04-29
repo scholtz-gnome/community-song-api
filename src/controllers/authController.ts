@@ -24,6 +24,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             sameSite: "none",
             secure: true,
             domain: "community-song-api.herokuapp.com",
+            path: "/auth",
           })
           .cookie("test-cookie", "testtesttest", {
             maxAge: maxAge * 1000,
