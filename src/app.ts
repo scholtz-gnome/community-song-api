@@ -11,10 +11,9 @@ export function newApp(): Express {
   app.use(compression());
   app.use(
     cors({
-      origin: [`${config.APP_URL_ROOT}`],
-      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      origin: [`herokuapp.com`],
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
       credentials: true,
-      allowedHeaders: ["Sec-Fetch-Site"],
     })
   );
   app.use(express.urlencoded({ extended: true }));
