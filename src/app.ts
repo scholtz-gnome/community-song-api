@@ -20,10 +20,10 @@ export function newApp(): Express {
     })
   );
   app.use(express.urlencoded({ extended: true }));
-  authRouter.use(cookieParser());
-  authRouter.use(checkUser);
-  authRouter.use(passport.initialize());
-  authRouter.use(passport.session());
+  app.use(cookieParser());
+  app.use(checkUser);
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use("/songs", songRouter);
   app.use("/auth", authRouter);
