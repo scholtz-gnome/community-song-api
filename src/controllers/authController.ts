@@ -19,7 +19,11 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
         return res
           .status(200)
           .cookie("jwt", token, {
-            httpOnly: true,
+            maxAge: maxAge * 1000,
+            sameSite: "none",
+            secure: true,
+          })
+          .cookie("test-cookie", "testtesttest", {
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
