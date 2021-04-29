@@ -12,7 +12,7 @@ export function newApp(): Express {
   app.use(
     cors({
       origin: [`${config.APP_URL_ROOT}`],
-      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
     })
   );
