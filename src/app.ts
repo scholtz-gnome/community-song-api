@@ -11,7 +11,7 @@ export function newApp(): Express {
   app.use(compression());
   app.use(
     cors({
-      origin: [`herokuapp.com`],
+      origin: [`${config.APP_URL_ROOT}`],
       methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
       credentials: true,
     })
