@@ -6,7 +6,6 @@ export const getLogin = (req: Request, res: Response) => {
     .status(200)
     .cookie("AuthorizationCookie", "userloggedin", {
       maxAge: 60 * 1000,
-      domain: "localhost",
       httpOnly: true,
     })
     .redirect(`${config.APP_URL_ROOT}`);
