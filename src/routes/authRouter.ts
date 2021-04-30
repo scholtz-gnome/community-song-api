@@ -21,6 +21,8 @@ authRouter.use(
     cookie: {
       maxAge: 60 * 1000,
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
     },
     resave: false,
     saveUninitialized: true,
