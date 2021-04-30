@@ -10,6 +10,7 @@ interface Config {
   GOOGLE_CLIENT_SECRET: string | undefined;
   GOOGLE_CLIENT_ID: string | undefined;
   JWT_SECRET: string | undefined;
+  SESSION_SECRET: string | undefined;
   APP_URL_ROOT: string | undefined;
   API_ROOT_URL: string | undefined;
 }
@@ -27,6 +28,7 @@ const config: Config = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   JWT_SECRET: process.env.JWT_SECRET,
+  SESSION_SECRET: process.env.SESSION_SECRET,
   APP_URL_ROOT: process.env.APP_URL_ROOT,
   API_ROOT_URL: process.env.API_ROOT_URL,
 };

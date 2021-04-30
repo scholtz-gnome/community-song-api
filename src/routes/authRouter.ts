@@ -1,28 +1,33 @@
 import { Router } from "express";
-import {
-  getGoogleRedirect,
-  getUserDetails,
-  getLogout,
-} from "../controllers/authController";
-import passport from "passport";
-import google from "./authStrategies/GoogleStrategy";
+import { getLogin, getLogout } from "../controllers/authController";
+import session from "express-session";
+import KnexSessionStore, { StoreFactory } from "connect-session-knex";
+import db from "../../db/db.connection";
+import config from "../../config";
 
 const authRouter: Router = Router();
+const knexStore: StoreFactory = KnexSessionStore(session);
 
-passport.use(google);
+const sessionStore = new knexStore({
+  //@ts-ignore
+  knex: db,
+});
 
-authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+authRouter.use(
+  session({
+    secret: config.SESSION_SECRET || "",
+    store: sessionStore,
+    unset: "destroy",
+    cookie: {
+      maxAge: 60 * 1000,
+      httpOnly: true,
+    },
+    resave: false,
+    saveUninitialized: true,
+  })
 );
 
-authRouter.get(
-  "/google/redirect",
-  passport.authenticate("google"),
-  getGoogleRedirect
-);
-
-authRouter.get("/", getUserDetails);
+authRouter.get("/login", getLogin);
 authRouter.get("/logout", getLogout);
 
 export default authRouter;
