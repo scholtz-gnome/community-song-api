@@ -33,13 +33,13 @@ export function newApp(): Express {
       },
     }),
     (req: Request, res: Response, next: NextFunction) => {
-      // res.cookie("CSRF-TOKEN", req.csrfToken(), {
-      //   sameSite: "strict",
-      //   secure: true,
-      //   httpOnly: false,
-      //   domain: `${config.ROOT_DOMAIN}`,
-      //   path: "/",
-      // });
+      res.cookie("CSRF-TOKEN", req.csrfToken(), {
+        sameSite: "strict",
+        secure: true,
+        httpOnly: false,
+        domain: `${config.ROOT_DOMAIN}`,
+        path: "/",
+      });
       next();
     }
   );
