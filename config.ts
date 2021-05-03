@@ -13,6 +13,7 @@ interface Config {
   SESSION_SECRET: string | undefined;
   APP_URL_ROOT: string | undefined;
   API_ROOT_URL: string | undefined;
+  ROOT_DOMAIN: string | undefined;
 }
 
 const config: Config = {
@@ -31,6 +32,7 @@ const config: Config = {
   SESSION_SECRET: process.env.SESSION_SECRET,
   APP_URL_ROOT: process.env.APP_URL_ROOT,
   API_ROOT_URL: process.env.API_ROOT_URL,
+  ROOT_DOMAIN: process.env.ROOT_DOMAIN,
 };
 
 export default config;

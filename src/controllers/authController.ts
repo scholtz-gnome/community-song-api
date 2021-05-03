@@ -23,7 +23,8 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             maxAge: ONE_DAY * 1000,
             sameSite: "strict",
             secure: true,
-            domain: "communitysong.co.za",
+            domain: `${config.ROOT_DOMAIN}`,
+            path: "/",
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
@@ -36,6 +37,5 @@ export const getUserDetails = (req: Request, res: Response) => {
 };
 
 export const getLogout = (_: Request, res: Response) => {
-  res.clearCookie("jwt");
-  res.redirect(`${config.APP_URL_ROOT}`);
+  res.clearCookie("jwt", { path: "/" }).redirect(`${config.APP_URL_ROOT}`);
 };
