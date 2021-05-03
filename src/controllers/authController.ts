@@ -36,5 +36,5 @@ export const getUserDetails = (req: Request, res: Response) => {
 };
 
 export const getLogout = (_: Request, res: Response) => {
-  res.cookie("jwt", "", { maxAge: 1 }).redirect(`${config.APP_URL_ROOT}`);
+  res.clearCookie("jwt").redirect(`${config.APP_URL_ROOT}`);
 };
