@@ -28,6 +28,8 @@ export function newApp(): Express {
         sameSite: "strict",
         secure: true,
         httpOnly: true,
+        domain: `${config.ROOT_DOMAIN}`,
+        path: "/",
       },
     }),
     (req: Request, res: Response, next: NextFunction) => {
