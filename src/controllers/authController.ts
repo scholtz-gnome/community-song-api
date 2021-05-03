@@ -37,5 +37,7 @@ export const getUserDetails = (req: Request, res: Response) => {
 };
 
 export const getLogout = (_: Request, res: Response) => {
-  res.clearCookie("jwt", { path: "/" }).redirect(`${config.APP_URL_ROOT}`);
+  res
+    .clearCookie("jwt", { path: "/", domain: `${config.ROOT_DOMAIN}` })
+    .redirect(`${config.APP_URL_ROOT}`);
 };
