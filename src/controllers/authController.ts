@@ -3,14 +3,14 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 export const getGoogleRedirect = (req: Request, res: Response) => {
-  const ONE_DAY = 24 * 60 * 60;
+  const EIGHT_HOURS = 8 * 60 * 60;
   const user: any | undefined = req.user;
   const id: number = user.id;
   jwt.sign(
     { id },
     config.JWT_SECRET || "",
     {
-      expiresIn: ONE_DAY,
+      expiresIn: EIGHT_HOURS,
     },
     (err, token) => {
       if (err) {
@@ -20,7 +20,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
           .status(200)
           .cookie("jwt", token, {
             httpOnly: true,
-            maxAge: ONE_DAY * 1000,
+            maxAge: EIGHT_HOURS * 1000,
             sameSite: "strict",
             secure: true,
             domain: `${config.ROOT_DOMAIN}`,
