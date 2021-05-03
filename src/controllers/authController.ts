@@ -9,7 +9,7 @@ export const getLogin = (req: Request, res: Response) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "*.communitysong.co.za",
+      domain: ".communitysong.co.za",
     })
     .redirect(`${config.APP_URL_ROOT}`);
 };
