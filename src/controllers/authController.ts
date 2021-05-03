@@ -3,14 +3,14 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 export const getGoogleRedirect = (req: Request, res: Response) => {
-  const maxAge = 24 * 60 * 60;
+  const ONE_DAY = 24 * 60 * 60;
   const user: any | undefined = req.user;
   const id: number = user.id;
   jwt.sign(
     { id },
     config.JWT_SECRET || "",
     {
-      expiresIn: maxAge,
+      expiresIn: ONE_DAY,
     },
     (err, token) => {
       if (err) {
@@ -20,7 +20,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
           .status(200)
           .cookie("jwt", token, {
             httpOnly: true,
-            maxAge: maxAge * 1000,
+            maxAge: ONE_DAY * 1000,
             sameSite: "strict",
             secure: true,
             domain: ".communitysong.co.za",
@@ -36,5 +36,5 @@ export const getUserDetails = (req: Request, res: Response) => {
 };
 
 export const getLogout = (_: Request, res: Response) => {
-  res.clearCookie("jwt").redirect(`${config.APP_URL_ROOT}`);
+  res.cookie("jwt", "", { maxAge: 1 }).redirect(`${config.APP_URL_ROOT}`);
 };
