@@ -23,6 +23,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             maxAge: maxAge * 1000,
             sameSite: "none",
             secure: true,
+            domain: ".communitysong.co.za",
           })
           .redirect(`${config.APP_URL_ROOT}`);
       }
