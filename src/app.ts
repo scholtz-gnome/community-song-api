@@ -27,13 +27,19 @@ export function newApp(): Express {
       cookie: {
         sameSite: "strict",
         secure: true,
-        // httpOnly: true,
+        httpOnly: true,
         domain: `${config.ROOT_DOMAIN}`,
         path: "/",
       },
     }),
     (req: Request, res: Response, next: NextFunction) => {
-      res.cookie("CSRF-TOKEN", req.csrfToken());
+      res.cookie("CSRF-TOKEN", req.csrfToken(), {
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+        domain: `${config.ROOT_DOMAIN}`,
+        path: "/",
+      });
       next();
     }
   );
