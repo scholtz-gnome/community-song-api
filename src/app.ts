@@ -27,7 +27,7 @@ export function newApp(): Express {
       cookie: {
         sameSite: "strict",
         secure: true,
-        httpOnly: true,
+        // httpOnly: true,
         domain: `${config.ROOT_DOMAIN}`,
         path: "/",
       },
