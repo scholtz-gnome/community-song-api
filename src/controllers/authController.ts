@@ -21,7 +21,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
           .cookie("jwt", token, {
             httpOnly: true,
             maxAge: maxAge * 1000,
-            sameSite: "none",
+            sameSite: "strict",
             secure: true,
             domain: ".communitysong.co.za",
           })
