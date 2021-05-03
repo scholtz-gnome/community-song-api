@@ -23,7 +23,7 @@ authRouter.use(
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "communitysong.co.za",
+      domain: "*.communitysong.co.za",
     },
     resave: false,
     saveUninitialized: true,
