@@ -27,6 +27,7 @@ export function newApp(): Express {
       cookie: {
         sameSite: "strict",
         secure: true,
+        httpOnly: false,
         domain: `${config.ROOT_DOMAIN}`,
         path: "/",
       },
@@ -35,6 +36,7 @@ export function newApp(): Express {
       res.cookie("CSRF-TOKEN", req.csrfToken(), {
         sameSite: "strict",
         secure: true,
+        httpOnly: false,
         domain: `${config.ROOT_DOMAIN}`,
         path: "/",
       });
