@@ -12,7 +12,7 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
       config.JWT_SECRET || "",
       async (err: any, decodedToken: any) => {
         if (err) {
-          console.log(err);
+          console.log("checkUser => ", err);
           next();
         } else {
           const [user]: User[] = await db("user")

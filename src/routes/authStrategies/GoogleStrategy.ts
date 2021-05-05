@@ -17,6 +17,7 @@ const google = new GoogleStrategy.Strategy(
     clientID: config.GOOGLE_CLIENT_ID || "",
     clientSecret: config.GOOGLE_CLIENT_SECRET || "",
     callbackURL: `${config.API_ROOT_URL}/auth/google/redirect`,
+    scope: ["profile", "email"],
   },
   async (accessToken: any, refreshToken: any, profile: any, done: Function) => {
     try {

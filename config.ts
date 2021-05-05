@@ -4,6 +4,7 @@ interface Config {
   PORT: string;
   NODE_ENV: string;
   MAX_FILE_SIZE: number;
+  EIGHT_HOURS: number;
   aws: { accessKey: string | undefined; secretAccessKey: string | undefined };
   DATABASE_URL: string | undefined;
   HEROKU_POSTGRESQL_YELLOW_URL: string | undefined;
@@ -20,6 +21,7 @@ const config: Config = {
   PORT: process.env.PORT || "4000",
   NODE_ENV: process.env.NODE_ENV || "test",
   MAX_FILE_SIZE: 10 * 1024 * 1024,
+  EIGHT_HOURS: 8 * 60 * 60,
   aws: {
     accessKey: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
