@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.19.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-PATHPARSE-1077067:
+    - knex > rechoir > resolve > path-parse:
+        reason: Accidentally hit ignore
+        expires: '2021-06-03T15:50:28.435Z'
+patch: {}

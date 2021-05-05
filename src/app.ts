@@ -8,10 +8,12 @@ import { checkUser } from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import csurf from "csurf";
+import helmet from "helmet";
 
 export function newApp(): Express {
   const app = express();
 
+  app.use(helmet());
   app.use(compression());
   app.use(
     cors({
