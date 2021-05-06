@@ -35,3 +35,16 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
     next();
   }
 };
+
+export const verify = (req: Request, res: Response, next: NextFunction) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (password.length < 10) {
+    return res.json({ message: "Password can't be less than 10 characters" });
+  } else if (!email.includes("@")) {
+    return res.json({ message: "That's not a valid email address" });
+  } else {
+    next();
+  }
+};
