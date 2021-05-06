@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import csurf from "csurf";
 import helmet from "helmet";
+import enforce from "express-sslify";
 
 export function newApp(): Express {
   const app = express();
@@ -22,6 +23,7 @@ export function newApp(): Express {
       credentials: true,
     })
   );
+  app.use(enforce.HTTPS());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(
