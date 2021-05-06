@@ -14,7 +14,7 @@ import enforce from "express-sslify";
 export function newApp(): Express {
   const app = express();
 
-  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  // app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(helmet());
   app.use(compression());
   app.use(
