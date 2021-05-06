@@ -23,7 +23,7 @@ export function newApp(): Express {
       credentials: true,
     })
   );
-  app.use(enforce.HTTPS());
+  // app.use(enforce.HTTPS());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(
