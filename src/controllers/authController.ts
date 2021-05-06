@@ -5,8 +5,6 @@ import jwt from "jsonwebtoken";
 export const localLogin = (req: Request, res: Response) => {
   const user: any | undefined = req.user;
   const id: number = user.id;
-  console.log("localLogin");
-  console.log(req.user);
   jwt.sign(
     { id },
     config.JWT_SECRET || "",
@@ -56,7 +54,7 @@ export const getGoogleRedirect = (req: Request, res: Response) => {
             domain: `${config.ROOT_DOMAIN}`,
             path: "/",
           })
-          .redirect(`${config.APP_URL_ROOT}`);
+          .redirect(`${config.APP_URL_ROOT}/profile`);
       }
     }
   );

@@ -8,7 +8,9 @@ const local = new LocalStrategy.Strategy(
   },
   async (username, password, done) => {
     try {
-      const [selectedUser] = await db("user").select().where("email", username);
+      const [selectedUser] = await db("user")
+        .select(["id", "password"])
+        .where("email", username);
 
       if (!selectedUser) {
         await bcrypt.genSalt(10, async (err, salt) => {
@@ -19,23 +21,27 @@ const local = new LocalStrategy.Strategy(
               if (err) {
                 console.log(err);
               } else {
-                const [newUser] = await db("user").returning(["*"]).insert({
-                  email: username,
-                  password: hash,
-                });
+                const [newUser] = await db("user")
+                  .returning(["id"])
+                  .insert({
+                    email: username,
+                    password: hash,
+                    first_name: username.split("@")[0],
+                  });
                 done(null, newUser);
               }
             });
           }
         });
       } else {
-        bcrypt.compare(password, selectedUser.password, (err, result) => {
+        await bcrypt.compare(password, selectedUser.password, (err, result) => {
           if (!result) {
             console.log(err);
             done("Wrong password");
           } else {
-            console.log(selectedUser);
-            done(null, selectedUser);
+            done(null, {
+              id: selectedUser.id,
+            });
           }
         });
       }

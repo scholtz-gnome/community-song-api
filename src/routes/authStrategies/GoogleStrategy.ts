@@ -8,7 +8,7 @@ passport.serializeUser((user: any, done: Function) => {
 });
 
 passport.deserializeUser(async (id: number, done: Function) => {
-  const [user] = await db("user").select().where("id", id);
+  const [user] = await db("user").select("id").where("id", id);
   done(null, user);
 });
 
@@ -23,10 +23,10 @@ const google = new GoogleStrategy.Strategy(
     try {
       const { given_name, family_name, picture, email } = profile._json;
       const { provider, id } = profile;
-      const [selectedUser] = await db.select().from("user").where("idp_id", id);
+      const [selectedUser] = await db("user").select("id").where("idp_id", id);
 
       if (!selectedUser) {
-        const [newUser] = await db("user").returning(["*"]).insert({
+        const [newUser] = await db("user").returning(["id"]).insert({
           first_name: given_name,
           last_name: family_name,
           email: email,
