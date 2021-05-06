@@ -1,27 +1,33 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import {
+  localLogin,
   getGoogleRedirect,
   getUserDetails,
   getLogout,
 } from "../controllers/authController";
 import passport from "passport";
 import google from "./authStrategies/GoogleStrategy";
+import local from "./authStrategies/LocalStrategy";
+import { verify } from "../middleware/authMiddleware";
 
 const authRouter: Router = Router();
 
+authRouter.use(express.json());
 passport.use(google);
+passport.use(local);
 
-authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+authRouter.post(
+  "/login/local",
+  verify,
+  passport.authenticate("local"),
+  localLogin
 );
-
+authRouter.get("/login/google", passport.authenticate("google"));
 authRouter.get(
   "/google/redirect",
   passport.authenticate("google"),
   getGoogleRedirect
 );
-
 authRouter.get("/", getUserDetails);
 authRouter.get("/logout", getLogout);
 

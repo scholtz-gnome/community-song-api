@@ -1,9 +1,10 @@
 interface User {
   id: number;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
-  password: string | null;
+  password: string;
+  role: string;
   verified: boolean;
   profilePic: string | null;
   identityProvider: string | null;

@@ -12,7 +12,7 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
       config.JWT_SECRET || "",
       async (err: any, decodedToken: any) => {
         if (err) {
-          console.log(err);
+          console.log("checkUser => ", err);
           next();
         } else {
           const [user]: User[] = await db("user")
@@ -31,6 +31,19 @@ export const checkUser = (req: Request, res: Response, next: NextFunction) => {
         }
       }
     );
+  } else {
+    next();
+  }
+};
+
+export const verify = (req: Request, res: Response, next: NextFunction) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (password.length < 10) {
+    return res.json({ message: "Password can't be less than 10 characters" });
+  } else if (!email.includes("@")) {
+    return res.json({ message: "That's not a valid email address" });
   } else {
     next();
   }
