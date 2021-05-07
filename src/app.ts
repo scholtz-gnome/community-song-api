@@ -15,7 +15,9 @@ export function newApp(): Express {
   const app = express();
 
   app.use(helmet());
-  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  if (config.NODE_ENV === "production") {
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  }
   app.use(compression());
   app.use(
     cors({
