@@ -8,12 +8,14 @@ import { checkUser } from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import csurf from "csurf";
-// import helmet from "helmet";
+import helmet from "helmet";
+import enforce from "express-sslify";
 
 export function newApp(): Express {
   const app = express();
 
-  // app.use(helmet());
+  app.use(helmet());
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(compression());
   app.use(
     cors({
