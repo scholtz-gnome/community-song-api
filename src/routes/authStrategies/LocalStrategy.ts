@@ -35,9 +35,10 @@ const local = new LocalStrategy.Strategy(
         });
       } else {
         await bcrypt.compare(password, selectedUser.password, (err, result) => {
-          if (!result) {
+          if (err) {
             console.log(err);
-            done("Wrong password");
+          } else if (!result) {
+            done(null);
           } else {
             done(null, {
               id: selectedUser.id,
