@@ -3,25 +3,22 @@ import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import aws from "aws-sdk";
 import db from "../../db/db.connection";
+import { allSongs } from "../repositories/songRepo";
 import Song from "../interfaces/Song";
 import User from "../interfaces/User";
 
 export const getSongs = async (_: Request, res: Response) => {
   try {
-    const allSongs: Song[] = await db("file")
-      .select(
-        "title",
-        "artist",
-        "url",
-        "first_name AS firstName",
-        "email",
-        "file.id"
-      )
-      .leftJoin("user", "file.user_id", "user.id");
+    // no SERVICE layer logic required
+
+    // DB layer here
+    const data = await allSongs();
+
+    // controller response
     return res.status(200).json({
       success: true,
       message: "All songs retrieved",
-      songs: allSongs,
+      songs: data,
     });
   } catch (err) {
     console.log(err);
