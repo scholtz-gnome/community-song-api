@@ -160,12 +160,12 @@ export const deleteFile = async (req: Request, res: Response) => {
         if (err) {
           console.log(err);
         } else if (data) {
-          const song = await deleteOneFile(db, songId);
+          await deleteOneFile(db, songId);
 
-          console.log(`API: File '${song.url}' deleted`);
+          console.log(`API: File '${url}' deleted`);
           return res.status(200).json({
             success: true,
-            message: `File '${song.url}' deleted`,
+            message: `File '${url}' deleted`,
           });
         }
       }

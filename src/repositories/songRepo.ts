@@ -50,7 +50,7 @@ export const deleteOneFile = async (
   songId: number
 ): Promise<Song> => {
   const [deletedFile]: Song[] = await db<Song[]>("file")
-    .returning(["url"])
+    .returning(["title"])
     .where("id", songId)
     .update("url", null);
 
