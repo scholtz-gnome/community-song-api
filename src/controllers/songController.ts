@@ -3,18 +3,19 @@ import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import aws from "aws-sdk";
 import db from "../../db/db.connection";
-import { allSongs } from "../repositories/songRepo";
-import Song from "../interfaces/Song";
+import {
+  getAllSongs,
+  getOneSong,
+  deleteOneSong,
+  deleteOneFile,
+  postOneSong,
+} from "../repositories/songRepo";
 import User from "../interfaces/User";
 
 export const getSongs = async (_: Request, res: Response) => {
   try {
-    // no SERVICE layer logic required
+    const data = await getAllSongs(db);
 
-    // DB layer here
-    const data = await allSongs();
-
-    // controller response
     return res.status(200).json({
       success: true,
       message: "All songs retrieved",
@@ -28,18 +29,9 @@ export const getSongs = async (_: Request, res: Response) => {
 export const getProfileSongs = async (req: Request, res: Response) => {
   const userEmail: string = req.params.email;
   try {
-    const allSongs: Song[] = await db("file")
-      .select(
-        "title",
-        "artist",
-        "url",
-        "first_name AS firstName",
-        "email",
-        "file.id"
-      )
-      .leftJoin("user", "file.user_id", "user.id");
+    const data = await getAllSongs(db);
 
-    const userSongs = allSongs.filter((song) => song.email === userEmail);
+    const userSongs = data.filter((song) => song.email === userEmail);
     return res.status(200).json(userSongs);
   } catch (err) {
     console.log(err);
@@ -49,20 +41,15 @@ export const getProfileSongs = async (req: Request, res: Response) => {
 export const getSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const [{ url, title, artist, firstName, profilePic, email, id }] = await db(
-      "file"
-    )
-      .where("file.id", songId)
-      .select(
-        "file.id AS id",
-        "title",
-        "artist",
-        "url",
-        "first_name AS firstName",
-        "profile_pic AS profilePic",
-        "email"
-      )
-      .leftJoin("user", "file.user_id", "user.id");
+    const {
+      id,
+      title,
+      artist,
+      firstName,
+      profilePic,
+      email,
+      url,
+    } = await getOneSong(db, songId);
 
     if (url === null) {
       return res.json({
@@ -119,12 +106,9 @@ export const getSong = async (req: Request, res: Response) => {
 };
 
 export const deleteSong = async (req: Request, res: Response) => {
-  const songId: string = req.params.id;
+  const songId: number = Number(req.params.id);
   try {
-    const [deletedSong]: Song[] = await db("file")
-      .returning(["id", "title", "url"])
-      .where("id", songId)
-      .del();
+    const deletedSong = await deleteOneSong(db, songId);
 
     if (deletedSong.url === null) {
       console.log(`API: '${deletedSong.title}' deleted from database`);
@@ -161,27 +145,23 @@ export const deleteSong = async (req: Request, res: Response) => {
 };
 
 export const deleteFile = async (req: Request, res: Response) => {
-  const songId = req.params.id;
+  const songId = Number(req.params.id);
   try {
-    const [song]: Song[] = await db("file")
-      .returning(["id", "title", "url"])
-      .where("id", songId);
+    const { url } = await getOneSong(db, songId);
 
     const s3 = new aws.S3();
 
     s3.deleteObject(
       {
         Bucket: "community-song-pdfs",
-        Key: song.url || "",
+        Key: url || "",
       },
       async (err, data) => {
         if (err) {
           console.log(err);
         } else if (data) {
-          await db("file")
-            .returning(["id", "title", "url"])
-            .where("id", songId)
-            .update("url", null);
+          const song = await deleteOneFile(db, songId);
+
           console.log(`API: File '${song.url}' deleted`);
           return res.status(200).json({
             success: true,
@@ -196,25 +176,22 @@ export const deleteFile = async (req: Request, res: Response) => {
 };
 
 export const postSong = async (req: Request, res: Response) => {
+  const title: string = req.body.title;
+  const artist: string = req.body.artist;
   let userId: number | null = null;
+
   if (req.user) {
     const user = req.user as User;
     userId = user.id;
   }
-  const title: string = req.body.title;
-  const artist: string = req.body.artist;
 
   if (req.files === undefined || req.files === null) {
     try {
-      await db("file").insert({
-        title,
-        artist,
-        user_id: userId,
-      });
+      const song = await postOneSong(db, title, artist, userId);
 
       return res
         .status(200)
-        .json({ success: true, message: `Song ${title} created` });
+        .json({ success: true, message: `Song ${song.title} created` });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
@@ -224,45 +201,40 @@ export const postSong = async (req: Request, res: Response) => {
     }
   }
 
-  const song = req.files.file as UploadedFile;
+  const file = req.files.file as UploadedFile;
 
-  if (song.size > config.MAX_FILE_SIZE) {
+  if (file.size > config.MAX_FILE_SIZE) {
     return res.status(413).json({
       success: false,
       message: "File size exceeded. Cannot exceed 10MB.",
     });
   } else if (
-    song.mimetype === "text/plain" ||
-    song.mimetype === "application/pdf"
+    file.mimetype === "text/plain" ||
+    file.mimetype === "application/pdf"
   ) {
     try {
-      await db("file").insert({
-        title,
-        artist,
-        url: song.name,
-        user_id: userId,
-      });
+      const song = await postOneSong(db, title, artist, userId, file.name);
 
       const s3 = new aws.S3();
 
       s3.upload(
         {
           Bucket: "community-song-pdfs",
-          Key: song.name,
-          Body: song.data,
+          Key: file.name,
+          Body: file.data,
         },
         (err, data) => {
           if (err) {
             console.log("Error from S3: " + err);
             res.status(500).json({
               success: false,
-              message: `There was an error uploading "${title}". Our fault!`,
+              message: `There was an error uploading "${song.title}". Our fault!`,
             });
           } else {
             res.status(200).json({
               data,
               success: true,
-              message: `File "${title}" uploaded successfully`,
+              message: `File "${song.title}" uploaded successfully`,
             });
           }
         }
