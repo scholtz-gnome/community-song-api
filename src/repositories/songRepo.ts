@@ -1,5 +1,7 @@
 import Song from "../interfaces/Song";
 import { Knex } from "knex";
+import aws from "aws-sdk";
+import util from "util";
 
 export const getAllSongs = async (db: Knex): Promise<Song[]> => {
   const songs: Song[] = await db<Song>("file")
@@ -72,4 +74,42 @@ export const postOneSong = async (
   });
 
   return createdSong;
+};
+
+const s3 = new aws.S3();
+
+interface s3Options {
+  Bucket: string;
+  Key: string;
+}
+
+interface s3Response {
+  data?: aws.S3.GetObjectOutput;
+  error?: aws.AWSError;
+}
+
+// const s3getObjectPromisified = util.promisify(S3.getObject);
+
+const s3getObjectPromisified = async (options: s3Options): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    s3.getObject(options, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+export const getFileData = async (url: string): Promise<s3Response> => {
+  const fileData: s3Response = { data: undefined, error: undefined };
+  const options: s3Options = { Bucket: "community-song-pdfs", Key: url };
+  try {
+    fileData.data = await s3getObjectPromisified(options);
+    return fileData;
+  } catch (err) {
+    fileData.error = err;
+    return fileData;
+  }
 };

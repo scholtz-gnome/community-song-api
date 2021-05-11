@@ -9,6 +9,7 @@ import {
   deleteOneSong,
   deleteOneFile,
   postOneSong,
+  getFileData,
 } from "../repositories/songRepo";
 import User from "../interfaces/User";
 
@@ -62,44 +63,36 @@ export const getSong = async (req: Request, res: Response) => {
       });
     }
 
-    const s3 = new aws.S3();
+    const s3Response = await getFileData(url);
 
-    s3.getObject(
-      {
-        Bucket: "community-song-pdfs",
-        Key: url,
-      },
-      (err, data) => {
-        if (err) {
-          if (err.code === "NoSuchKey") {
-            console.log(`Song with Key '${url} not found in S3 Bucket'`);
-            return res.json({
-              title,
-              artist,
-              firstName,
-              profilePic,
-              email,
-            });
-          }
-          console.log(err);
-          return res
-            .status(500)
-            .json({ success: false, message: "Can't fetch file" });
-        } else {
-          return res.status(200).json({
-            id,
-            title,
-            artist,
-            firstName,
-            profilePic,
-            email,
-            file: data.Body?.toString("base64"),
-            success: true,
-            message: `Song ${title} retrieved`,
-          });
-        }
+    if (s3Response.data) {
+      return res.status(200).json({
+        id,
+        title,
+        artist,
+        firstName,
+        profilePic,
+        email,
+        file: s3Response.data.Body?.toString("base64"),
+        success: true,
+        message: `Song ${title} retrieved`,
+      });
+    } else if (s3Response.error) {
+      console.log(s3Response.error);
+      if (s3Response.error.code === "NoSuchKey") {
+        console.log(`Song with Key '${url} not found in S3 Bucket'`);
+        return res.json({
+          title,
+          artist,
+          firstName,
+          profilePic,
+          email,
+        });
       }
-    );
+      return res
+        .status(500)
+        .json({ success: false, message: "Can't fetch file" });
+    }
   } catch (err) {
     console.log(err);
   }
