@@ -90,7 +90,7 @@ interface s3Response {
 
 // const s3getObjectPromisified = util.promisify(S3.getObject);
 
-const s3getObjectPromisified = async (options: s3Options): Promise<any> => {
+const promisifyGetObject = async (options: s3Options): Promise<any> => {
   return new Promise((resolve, reject) => {
     s3.getObject(options, (err, data) => {
       if (err) {
@@ -106,7 +106,7 @@ export const getFileData = async (url: string): Promise<s3Response> => {
   const fileData: s3Response = { data: undefined, error: undefined };
   const options: s3Options = { Bucket: "community-song-pdfs", Key: url };
   try {
-    fileData.data = await s3getObjectPromisified(options);
+    fileData.data = await promisifyGetObject(options);
     return fileData;
   } catch (err) {
     fileData.error = err;
