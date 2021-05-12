@@ -9,7 +9,7 @@ import {
   deleteOneSong,
   deleteOneFile,
   postOneSong,
-  getFileData,
+  getOneFile,
 } from "../repositories/songRepo";
 import User from "../interfaces/User";
 
@@ -42,59 +42,44 @@ export const getProfileSongs = async (req: Request, res: Response) => {
 export const getSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const {
-      id,
+    const { title, artist, firstName, profilePic, email, url } =
+      await getOneSong(db, songId);
+
+    return res.status(200).json({
       title,
       artist,
       firstName,
       profilePic,
       email,
       url,
-    } = await getOneSong(db, songId);
-
-    if (url === null) {
-      return res.json({
-        id,
-        title,
-        artist,
-        firstName,
-        profilePic,
-        email,
-      });
-    }
-
-    const s3Response = await getFileData(url);
-
-    if (s3Response.data) {
-      return res.status(200).json({
-        id,
-        title,
-        artist,
-        firstName,
-        profilePic,
-        email,
-        file: s3Response.data.Body?.toString("base64"),
-        success: true,
-        message: `Song ${title} retrieved`,
-      });
-    } else if (s3Response.error) {
-      console.log(s3Response.error);
-      if (s3Response.error.code === "NoSuchKey") {
-        console.log(`Song with Key '${url} not found in S3 Bucket'`);
-        return res.json({
-          title,
-          artist,
-          firstName,
-          profilePic,
-          email,
-        });
-      }
-      return res
-        .status(500)
-        .json({ success: false, message: "Can't fetch file" });
-    }
+      success: true,
+      message: `Song retrieved`,
+    });
   } catch (err) {
     console.log(err);
+    return res.json({ success: false, message: "Couldn't retrieve file" });
+  }
+};
+
+export const getFile = async (req: Request, res: Response) => {
+  const songId: number = Number(req.params.id);
+  try {
+    const { url } = await getOneSong(db, songId);
+
+    if (!url) {
+      throw new Error("No file found");
+    }
+
+    const file: aws.S3.GetObjectOutput = await getOneFile(url);
+
+    return res.status(200).json({
+      file: file.Body?.toString("base64"),
+      success: true,
+      message: `File retrieved`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(404);
   }
 };
 
