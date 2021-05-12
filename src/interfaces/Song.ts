@@ -3,10 +3,11 @@ interface Song {
   title: string;
   artist: string;
   url: string | null;
-  first_name: string;
-  profile_pic: string;
+  firstName: string;
+  profilePic: string;
   file: string;
   email: string;
+  userId: number | null;
 }
 
 export default Song;

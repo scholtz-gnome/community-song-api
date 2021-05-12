@@ -7,6 +7,7 @@ import {
   postSong,
   deleteSong,
   deleteFile,
+  getFile,
 } from "../controllers/songController";
 
 const songRouter: Router = Router();
@@ -15,6 +16,7 @@ songRouter.use(express.json());
 songRouter.use(fileUpload());
 songRouter.get("/", getSongs);
 songRouter.get("/:id", getSong);
+songRouter.get("/files/:id", getFile);
 songRouter.get("/profileSongs/:email", getProfileSongs);
 songRouter.post("/", postSong);
 songRouter.delete("/song/:id", deleteSong);
