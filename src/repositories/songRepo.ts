@@ -34,30 +34,6 @@ export const getOneSong = async (db: Knex, songId: number): Promise<Song> => {
   return song;
 };
 
-export const deleteOneSong = async (
-  db: Knex,
-  songId: number
-): Promise<Song> => {
-  const [deletedSong]: Song[] = await db<Song>("file")
-    .returning(["id", "title", "url"])
-    .where("id", songId)
-    .del();
-
-  return deletedSong;
-};
-
-export const deleteOneFile = async (
-  db: Knex,
-  songId: number
-): Promise<Song> => {
-  const [deletedFile]: Song[] = await db<Song[]>("file")
-    .returning(["title"])
-    .where("id", songId)
-    .update("url", null);
-
-  return deletedFile;
-};
-
 export const postOneSong = async (
   db: Knex,
   title: string,
@@ -75,16 +51,72 @@ export const postOneSong = async (
   return createdSong;
 };
 
+export const deleteOneSong = async (
+  db: Knex,
+  songId: number
+): Promise<Song> => {
+  const [deletedSong]: Song[] = await db<Song>("file")
+    .returning(["title", "url"])
+    .where("id", songId)
+    .del();
+
+  return deletedSong;
+};
+
+export const deleteSongURL = async (
+  db: Knex,
+  songId: number
+): Promise<Song> => {
+  try {
+    const [updatedSong]: Song[] = await db<Song[]>("file")
+      .returning(["title"])
+      .where("id", songId)
+      .update("url", null);
+
+    return updatedSong;
+  } catch (err) {
+    console.log(err);
+    throw new Error("deleteOneFile failed");
+  }
+};
+
 const s3 = new aws.S3();
 
-export const getOneFile = async (url: string): Promise<any> => {
+export const getS3File = async (
+  url: string
+): Promise<aws.S3.GetObjectOutput> => {
   try {
-    const data = await s3
+    const file = await s3
       .getObject({ Bucket: "community-song-pdfs", Key: url })
       .promise();
-    return data;
+    return file;
   } catch (err) {
     console.log(err);
     throw new Error("S3 getObject failed");
+  }
+};
+
+export const postS3File = async (
+  key: string,
+  fileData: Buffer
+): Promise<void> => {
+  try {
+    await s3
+      .upload({ Bucket: "community-song-pdfs", Key: key, Body: fileData })
+      .promise();
+  } catch (err) {
+    console.log(err);
+    throw new Error("s3Upload error");
+  }
+};
+
+export const deleteS3File = async (url: string): Promise<void> => {
+  try {
+    await s3
+      .deleteObject({ Bucket: "community-song-pdfs", Key: url })
+      .promise();
+  } catch (err) {
+    console.log(err);
+    throw new Error("S3 deleteObject failed");
   }
 };
