@@ -16,7 +16,7 @@ export const getAllSongs = async (db: Knex): Promise<Song[]> => {
 
   return songs;
 };
-
+// return song || null OR raise exception where it's not found
 export const getOneSong = async (db: Knex, songId: number): Promise<Song> => {
   const [song]: Song[] = await db<Song[]>("file")
     .where("file.id", songId)
@@ -29,7 +29,8 @@ export const getOneSong = async (db: Knex, songId: number): Promise<Song> => {
       "profile_pic AS profilePic",
       "email"
     )
-    .leftJoin("user", "file.user_id", "user.id");
+    .leftJoin("user", "file.user_id", "user.id")
+    .limit(1);
 
   return song;
 };

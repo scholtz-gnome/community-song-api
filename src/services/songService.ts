@@ -1,20 +1,11 @@
 import db from "../../db/db.connection";
-import {
-  getAllSongs,
-  getOneSong,
-  postOneSong,
-  deleteOneSong,
-  deleteSongURL,
-  getS3File,
-  postS3File,
-  deleteS3File,
-} from "../repositories/songRepo";
+import * as SongRepo from "../repositories/songRepo";
 import Song from "../interfaces/Song";
 import NewSong from "../interfaces/NewSong";
 
-export const fetchAllSongsService = async (): Promise<Song[]> => {
+export const fetchAllSongs = async (): Promise<Song[]> => {
   try {
-    const allSongs = await getAllSongs(db);
+    const allSongs = await SongRepo.getAllSongs(db);
     return allSongs;
   } catch (err) {
     console.log(err);
@@ -22,9 +13,9 @@ export const fetchAllSongsService = async (): Promise<Song[]> => {
   }
 };
 
-export const fetchUserSongsService = async (email: string): Promise<Song[]> => {
+export const fetchUserSongs = async (email: string): Promise<Song[]> => {
   try {
-    const allSongs = await getAllSongs(db);
+    const allSongs = await SongRepo.getAllSongs(db);
     return allSongs.filter((song) => song.email === email);
   } catch (err) {
     console.log(err);
@@ -32,9 +23,9 @@ export const fetchUserSongsService = async (email: string): Promise<Song[]> => {
   }
 };
 
-export const fetchOneSongService = async (songId: number): Promise<Song> => {
+export const fetchOneSong = async (songId: number): Promise<Song> => {
   try {
-    const song = await getOneSong(db, songId);
+    const song = await SongRepo.getOneSong(db, songId);
     return song;
   } catch (err) {
     console.log(err);
@@ -42,16 +33,16 @@ export const fetchOneSongService = async (songId: number): Promise<Song> => {
   }
 };
 
-export const fetchFileService = async (
+export const fetchFile = async (
   songId: number
 ): Promise<string | undefined> => {
   try {
-    const { url } = await getOneSong(db, songId);
+    const { url } = await SongRepo.getOneSong(db, songId);
     if (!url) {
       throw new Error("No file found");
     }
 
-    const file = await getS3File(url);
+    const file = await SongRepo.getS3File(url);
     return file.Body?.toString("base64");
   } catch (err) {
     console.log(err);
@@ -59,28 +50,26 @@ export const fetchFileService = async (
   }
 };
 
-export const deleteSongService = async (songId: number): Promise<any> => {
+export const deleteSong = async (songId: number): Promise<any> => {
   try {
-    const { title, url } = await deleteOneSong(db, songId);
+    const { title, url } = await SongRepo.deleteOneSong(db, songId);
     const song = { title, url };
     if (url) {
-      await deleteS3File(url);
-      return song;
+      await SongRepo.deleteS3File(url);
     }
+    return song;
   } catch (err) {
     console.log(err);
     throw new Error("Error deleting song");
   }
 };
 
-export const deleteFileService = async (
-  songId: number
-): Promise<string | null> => {
+export const deleteFile = async (songId: number): Promise<string | null> => {
   try {
-    const { url } = await getOneSong(db, songId);
+    const { url } = await SongRepo.getOneSong(db, songId);
     if (url) {
-      await deleteS3File(url);
-      await deleteSongURL(db, songId);
+      await SongRepo.deleteS3File(url);
+      await SongRepo.deleteSongURL(db, songId);
     }
     return url;
   } catch (err) {
@@ -89,10 +78,10 @@ export const deleteFileService = async (
   }
 };
 
-export const postSongService = async (newSong: NewSong): Promise<Song> => {
+export const postSong = async (newSong: NewSong): Promise<Song> => {
   try {
     if (newSong.file) {
-      const title = await postOneSong(
+      const title = await SongRepo.postOneSong(
         db,
         newSong.title,
         newSong.artist,
@@ -100,11 +89,11 @@ export const postSongService = async (newSong: NewSong): Promise<Song> => {
         newSong.file.name
       );
 
-      await postS3File(newSong.file.name, newSong.file.data);
+      await SongRepo.postS3File(newSong.file.name, newSong.file.data);
 
       return title;
     } else {
-      const title = await postOneSong(
+      const title = await SongRepo.postOneSong(
         db,
         newSong.title,
         newSong.artist,

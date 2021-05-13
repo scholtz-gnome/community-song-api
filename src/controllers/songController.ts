@@ -1,20 +1,12 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import {
-  fetchAllSongsService,
-  fetchUserSongsService,
-  fetchOneSongService,
-  fetchFileService,
-  deleteSongService,
-  deleteFileService,
-  postSongService,
-} from "../services/songService";
+import * as SongService from "../services/songService";
 import User from "../interfaces/User";
 import NewSong from "../interfaces/NewSong";
 
 export const getSongs = async (_: Request, res: Response) => {
   try {
-    const allSongs = await fetchAllSongsService();
+    const allSongs = await SongService.fetchAllSongs();
     return res.status(200).json({
       success: true,
       message: "All songs retrieved",
@@ -28,7 +20,7 @@ export const getSongs = async (_: Request, res: Response) => {
 export const getProfileSongs = async (req: Request, res: Response) => {
   const email: string = req.params.email;
   try {
-    const userSongs = await fetchUserSongsService(email);
+    const userSongs = await SongService.fetchUserSongs(email);
     return res.status(200).json(userSongs);
   } catch (err) {
     console.log(err);
@@ -39,7 +31,7 @@ export const getSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
     const { title, artist, firstName, profilePic, email, url, id } =
-      await fetchOneSongService(songId);
+      await SongService.fetchOneSong(songId);
 
     return res.status(200).json({
       id,
@@ -61,7 +53,7 @@ export const getSong = async (req: Request, res: Response) => {
 export const getFile = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const file = await fetchFileService(songId);
+    const file = await SongService.fetchFile(songId);
 
     return res.status(200).json({
       file,
@@ -77,7 +69,7 @@ export const getFile = async (req: Request, res: Response) => {
 export const deleteSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const deletedSong = await deleteSongService(songId);
+    const deletedSong = await SongService.deleteSong(songId);
     return res.status(200).json({
       success: true,
       message: `'${deletedSong.title}' deleted from database along with '${deletedSong.url}'`,
@@ -90,7 +82,7 @@ export const deleteSong = async (req: Request, res: Response) => {
 export const deleteFile = async (req: Request, res: Response) => {
   const songId = Number(req.params.id);
   try {
-    const url = await deleteFileService(songId);
+    const url = await SongService.deleteFile(songId);
 
     return res.status(200).json({
       success: true,
@@ -109,7 +101,7 @@ export const postSong = async (req: Request, res: Response) => {
     file: req.files?.file as UploadedFile,
   };
 
-  const response = await postSongService(newSong);
+  const response = await SongService.postSong(newSong);
 
   if (response) {
     return res
