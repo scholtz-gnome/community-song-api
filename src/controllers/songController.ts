@@ -56,7 +56,7 @@ export const deleteSong = async (req: Request, res: Response) => {
     const deletedSong = await SongService.deleteSong(songId);
     return res.status(200).json({
       success: true,
-      message: `'${deletedSong.title}' deleted from database along with '${deletedSong.url}'`,
+      message: `'${deletedSong.title}' deleted from database`,
     });
   } catch (err) {
     console.log(err);

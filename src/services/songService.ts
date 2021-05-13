@@ -1,3 +1,4 @@
+import config from "../../config";
 import db from "../../db/db.connection";
 import * as SongRepo from "../repositories/songRepo";
 import * as FileRepo from "../repositories/fileRepo";
@@ -51,16 +52,44 @@ export const deleteSong = async (songId: number): Promise<any> => {
 export const postSong = async (newSong: NewSong): Promise<Song> => {
   try {
     if (newSong.file) {
+      if (newSong.file.size > config.MAX_FILE_SIZE) {
+        throw new Error("Error creating song. Size can't exceed 10MB");
+      }
+      if (newSong.file.mimetype !== "application/pdf") {
+        throw new Error("Error creating song. File must be .pdf or .txt");
+      }
+      if (!newSong.user) {
+        const title = await SongRepo.postOneSong(
+          db,
+          newSong.title,
+          newSong.artist,
+          null,
+          newSong.file.name
+        );
+
+        await FileRepo.postS3File(newSong.file.name, newSong.file.data);
+
+        return title;
+      } else {
+        const title = await SongRepo.postOneSong(
+          db,
+          newSong.title,
+          newSong.artist,
+          newSong.user.id,
+          newSong.file.name
+        );
+
+        await FileRepo.postS3File(newSong.file.name, newSong.file.data);
+
+        return title;
+      }
+    } else if (!newSong.user) {
       const title = await SongRepo.postOneSong(
         db,
         newSong.title,
         newSong.artist,
-        newSong.user.id,
-        newSong.file.name
+        null
       );
-
-      await FileRepo.postS3File(newSong.file.name, newSong.file.data);
-
       return title;
     } else {
       const title = await SongRepo.postOneSong(

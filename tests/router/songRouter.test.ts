@@ -10,7 +10,7 @@ describe("songRouter", () => {
   app.use(path, songRouter);
 
   beforeAll(async () => {
-    jest.setTimeout(15000);
+    jest.setTimeout(30000);
     await db.migrate.latest();
   });
 
@@ -80,42 +80,6 @@ describe("songRouter", () => {
         expect(res.status).toBe(200);
       });
     });
-
-    describe("When a file size exceeds the upper limit", () => {
-      it("responds with status code: 413, success: false, message: 'File size exceeded. Cannot exceed 10MB.'", async () => {
-        const res = await request(app)
-          .post(path)
-          .field({ title: "Linux Commands" })
-          .field({ artist: "Stephen" })
-          .attach(
-            "file",
-            `${__dirname}/linux-commands-handbook.pdf`,
-            "linux-commands-handbook.pdf"
-          );
-
-        expect(JSON.parse(res.text).success).toBe(false);
-        expect(JSON.parse(res.text).message).toBe(
-          "File size exceeded. Cannot exceed 10MB."
-        );
-        expect(res.status).toBe(413);
-      });
-    });
-
-    describe("When a file is not in .pdf or .txt format", () => {
-      it("responds with status code: 400, success: false, message: 'Wrong file type. Must be .pdf or .txt'", async () => {
-        const res = await request(app)
-          .post(path)
-          .field({ title: "Can I do HTML" })
-          .field({ artist: "HTML Man" })
-          .attach("file", `${__dirname}/test.html`, "test.html");
-
-        expect(JSON.parse(res.text).success).toBe(false);
-        expect(JSON.parse(res.text).message).toBe(
-          "Wrong file type. Must be .pdf or .txt"
-        );
-        expect(res.status).toBe(400);
-      });
-    });
   });
 
   describe("GET", () => {
@@ -169,28 +133,16 @@ describe("songRouter", () => {
       });
     });
 
-    describe("When a file of given id is deleted", () => {
-      it("responds with status code: 200, success: true, message: 'File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted'", async () => {
-        const res = await request(app).delete(`${path}/file/2`);
+    describe("When a song with a file of given id is deleted", () => {
+      it("responds with status code: 200, success: true, message: ''React Book' deleted from database'", async () => {
+        const res = await request(app).delete(`${path}/song/3`);
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(
-          "File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted"
+          "'React Book' deleted from database"
         );
         expect(res.status).toBe(200);
       });
-    });
-  });
-
-  describe("When a song with a file of given id is deleted", () => {
-    it("responds with status code: 200, success: true, message: ''React Book' deleted from database along with 'react-beginners-handbook.pdf''", async () => {
-      const res = await request(app).delete(`${path}/song/3`);
-
-      expect(JSON.parse(res.text).success).toBe(true);
-      expect(JSON.parse(res.text).message).toBe(
-        "'React Book' deleted from database along with 'react-beginners-handbook.pdf'"
-      );
-      expect(res.status).toBe(200);
     });
   });
 });
