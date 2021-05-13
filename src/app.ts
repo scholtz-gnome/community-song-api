@@ -2,6 +2,7 @@ import config from "../config";
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import songRouter from "./routes/songRouter";
+import fileRouter from "./routes/fileRouter";
 import authRouter from "./routes/authRouter";
 import compression from "compression";
 import { checkUser } from "./middleware/authMiddleware";
@@ -54,6 +55,7 @@ export function newApp(): Express {
   app.use(passport.session());
 
   app.use("/songs", songRouter);
+  app.use("/files", fileRouter);
   app.use("/auth", authRouter);
 
   return app;

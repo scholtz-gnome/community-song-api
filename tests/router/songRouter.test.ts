@@ -7,7 +7,7 @@ describe("songRouter", () => {
   const path: string = "/songs";
   const app: Express = express();
 
-  app.use("/songs", songRouter);
+  app.use(path, songRouter);
 
   beforeAll(async () => {
     jest.setTimeout(15000);
@@ -37,7 +37,7 @@ describe("songRouter", () => {
       it("responds with status code: 200, success: true, message: 'Song Octavarium created'", async () => {
         const res = await request(app)
           .post(path)
-          .send({ title: "Octavarium", artist: "Dream Theater" });
+          .field({ title: "Octavarium", artist: "Dream Theater" });
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe("Song Octavarium created");
@@ -59,7 +59,7 @@ describe("songRouter", () => {
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(
-          `File "Nocturne in Eb" uploaded successfully`
+          `Song Nocturne in Eb created`
         );
         expect(res.status).toBe(200);
       });
@@ -76,9 +76,7 @@ describe("songRouter", () => {
           );
 
         expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe(
-          `File "React Book" uploaded successfully`
-        );
+        expect(JSON.parse(res.text).message).toBe(`Song React Book created`);
         expect(res.status).toBe(200);
       });
     });

@@ -50,22 +50,6 @@ export const getSong = async (req: Request, res: Response) => {
   }
 };
 
-export const getFile = async (req: Request, res: Response) => {
-  const songId: number = Number(req.params.id);
-  try {
-    const file = await SongService.fetchFile(songId);
-
-    return res.status(200).json({
-      file,
-      success: true,
-      message: `File retrieved`,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(404);
-  }
-};
-
 export const deleteSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
@@ -73,20 +57,6 @@ export const deleteSong = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: `'${deletedSong.title}' deleted from database along with '${deletedSong.url}'`,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const deleteFile = async (req: Request, res: Response) => {
-  const songId = Number(req.params.id);
-  try {
-    const url = await SongService.deleteFile(songId);
-
-    return res.status(200).json({
-      success: true,
-      message: `File '${url}' deleted`,
     });
   } catch (err) {
     console.log(err);

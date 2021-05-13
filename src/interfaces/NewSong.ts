@@ -4,7 +4,7 @@ import User from "./User";
 interface NewSong {
   title: string;
   artist: string;
-  user: User;
+  user?: User;
   file: UploadedFile | undefined;
 }
 

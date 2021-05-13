@@ -1,5 +1,6 @@
 import db from "../../db/db.connection";
 import * as SongRepo from "../repositories/songRepo";
+import * as FileRepo from "../repositories/fileRepo";
 import Song from "../interfaces/Song";
 import NewSong from "../interfaces/NewSong";
 
@@ -33,48 +34,17 @@ export const fetchOneSong = async (songId: number): Promise<Song> => {
   }
 };
 
-export const fetchFile = async (
-  songId: number
-): Promise<string | undefined> => {
-  try {
-    const { url } = await SongRepo.getOneSong(db, songId);
-    if (!url) {
-      throw new Error("No file found");
-    }
-
-    const file = await SongRepo.getS3File(url);
-    return file.Body?.toString("base64");
-  } catch (err) {
-    console.log(err);
-    throw new Error("Error fetching file");
-  }
-};
-
 export const deleteSong = async (songId: number): Promise<any> => {
   try {
     const { title, url } = await SongRepo.deleteOneSong(db, songId);
     const song = { title, url };
     if (url) {
-      await SongRepo.deleteS3File(url);
+      await FileRepo.deleteS3File(url);
     }
     return song;
   } catch (err) {
     console.log(err);
     throw new Error("Error deleting song");
-  }
-};
-
-export const deleteFile = async (songId: number): Promise<string | null> => {
-  try {
-    const { url } = await SongRepo.getOneSong(db, songId);
-    if (url) {
-      await SongRepo.deleteS3File(url);
-      await SongRepo.deleteSongURL(db, songId);
-    }
-    return url;
-  } catch (err) {
-    console.log(err);
-    throw new Error("Error deleting file");
   }
 };
 
@@ -89,7 +59,7 @@ export const postSong = async (newSong: NewSong): Promise<Song> => {
         newSong.file.name
       );
 
-      await SongRepo.postS3File(newSong.file.name, newSong.file.data);
+      await FileRepo.postS3File(newSong.file.name, newSong.file.data);
 
       return title;
     } else {
