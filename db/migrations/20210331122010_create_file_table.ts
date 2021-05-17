@@ -4,6 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("file", (table) => {
     table.increments().primary();
     table.string("key").notNullable();
+    table.string("type").defaultTo(null);
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
