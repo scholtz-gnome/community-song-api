@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments().primary();
     table.string("key").notNullable();
     table.string("type").defaultTo(null);
+    table.integer("song_id").references("id").inTable("song").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
