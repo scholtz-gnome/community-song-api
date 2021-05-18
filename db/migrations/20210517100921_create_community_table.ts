@@ -1,17 +1,16 @@
 import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable("file", (table) => {
+  return knex.schema.createTable("community", (table) => {
     table.increments().primary();
-    table.string("title").notNullable();
-    table.string("artist").defaultTo(null);
-    table.string("url").defaultTo(null);
-    table.integer("user_id").references("id").inTable("user").defaultTo(null);
+    table.string("name").notNullable();
+    table.text("about").defaultTo(null);
+    table.string("type").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return knex.schema.dropTable("file");
+  return knex.schema.dropTable("community");
 }

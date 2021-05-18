@@ -44,7 +44,9 @@ describe("fileRouter", () => {
   describe("DELETE", () => {
     describe("When a file of given id is deleted", () => {
       it("responds with status code: 200, success: true, message: 'File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted'", async () => {
-        const res = await request(app).delete(`${path}/1`);
+        const res = await request(app).delete(
+          `${path}/Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf`
+        );
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(

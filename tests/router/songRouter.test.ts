@@ -11,11 +11,11 @@ describe("songRouter", () => {
 
   beforeAll(async () => {
     jest.setTimeout(30000);
+    await db.migrate.rollback();
     await db.migrate.latest();
   });
 
   afterAll(async () => {
-    await db.migrate.rollback();
     await db.destroy();
   });
 
@@ -96,7 +96,6 @@ describe("songRouter", () => {
             email: null,
             firstName: null,
             id: 1,
-            url: null,
           },
           {
             title: "Nocturne in Eb",
@@ -104,7 +103,6 @@ describe("songRouter", () => {
             email: null,
             firstName: null,
             id: 2,
-            url: "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf",
           },
           {
             title: "React Book",
@@ -112,7 +110,6 @@ describe("songRouter", () => {
             email: null,
             firstName: null,
             id: 3,
-            url: "react-beginners-handbook.pdf",
           },
         ]);
         expect(res.status).toBe(200);
@@ -128,18 +125,6 @@ describe("songRouter", () => {
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(
           "'Octavarium' deleted from database"
-        );
-        expect(res.status).toBe(200);
-      });
-    });
-
-    describe("When a song with a file of given id is deleted", () => {
-      it("responds with status code: 200, success: true, message: ''React Book' deleted from database'", async () => {
-        const res = await request(app).delete(`${path}/song/3`);
-
-        expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe(
-          "'React Book' deleted from database"
         );
         expect(res.status).toBe(200);
       });

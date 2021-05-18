@@ -18,13 +18,13 @@ export const getFile = async (req: Request, res: Response) => {
 };
 
 export const deleteFile = async (req: Request, res: Response) => {
-  const songId = Number(req.params.id);
+  const key = req.params.key;
   try {
-    const url = await FileService.deleteFile(songId);
+    await FileService.deleteFile(key);
 
     return res.status(200).json({
       success: true,
-      message: `File '${url}' deleted`,
+      message: `File '${key}' deleted`,
     });
   } catch (err) {
     console.log(err);
