@@ -12,6 +12,7 @@ import passport from "passport";
 import csurf from "csurf";
 import helmet from "helmet";
 import enforce from "express-sslify";
+import songsFilesRouter from "./routes/songsFilesRouter";
 
 export function newApp(): Express {
   const app = express();
@@ -58,6 +59,7 @@ export function newApp(): Express {
   app.use("/songs", songRouter);
   app.use(communitiesRouter);
   app.use("/files", fileRouter);
+  app.use(songsFilesRouter);
   app.use("/auth", authRouter);
 
   return app;
