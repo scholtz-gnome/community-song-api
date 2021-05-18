@@ -6,8 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-endpoints.md
-
 uploads/
 
 *.pem
