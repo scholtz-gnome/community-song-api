@@ -27,7 +27,7 @@ export const fetchUserSongs = async (email: string): Promise<Song[]> => {
 
 export const fetchOneSong = async (songId: number): Promise<Song> => {
   try {
-    const song = await SongRepo.getOneSong(db, songId);
+    const song: Song = await SongRepo.getOneSong(db, songId);
     return song;
   } catch (err) {
     console.log(err);
@@ -37,11 +37,18 @@ export const fetchOneSong = async (songId: number): Promise<Song> => {
 
 export const deleteSong = async (songId: number): Promise<any> => {
   try {
-    const { title, url } = await SongRepo.deleteOneSong(db, songId);
-    const song = { title, url };
-    if (url) {
-      await FileRepo.deleteS3File(url);
+    const { title } = await SongRepo.deleteOneSong(db, songId);
+    const fileKeys: string[] = await FileRepo.deleteFilesOfSong(db, songId);
+
+    if (fileKeys !== []) {
+      fileKeys.forEach(async (key) => {
+        await FileRepo.deleteS3File(key);
+      });
     }
+
+    const song = {
+      title,
+    };
     return song;
   } catch (err) {
     console.log(err);
@@ -59,29 +66,29 @@ export const postSong = async (newSong: NewSong): Promise<Song> => {
         throw new Error("Error creating song. File must be .pdf or .txt");
       }
       if (!newSong.user) {
-        const title = await SongRepo.postOneSong(
+        const createdSong = await SongRepo.postOneSong(
           db,
           newSong.title,
           newSong.artist,
-          null,
-          newSong.file.name
+          null
         );
 
+        await FileRepo.postFile(newSong.file.name, createdSong.id, null);
         await FileRepo.postS3File(newSong.file.name, newSong.file.data);
 
-        return title;
+        return createdSong;
       } else {
-        const title = await SongRepo.postOneSong(
+        const createdSong = await SongRepo.postOneSong(
           db,
           newSong.title,
           newSong.artist,
-          newSong.user.id,
-          newSong.file.name
+          newSong.user.id
         );
 
+        await FileRepo.postFile(newSong.file.name, createdSong.id, null);
         await FileRepo.postS3File(newSong.file.name, newSong.file.data);
 
-        return title;
+        return createdSong;
       }
     } else if (!newSong.user) {
       const title = await SongRepo.postOneSong(

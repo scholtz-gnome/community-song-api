@@ -30,17 +30,12 @@ export const getProfileSongs = async (req: Request, res: Response) => {
 export const getSong = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   try {
-    const { title, artist, firstName, profilePic, email, url, id } =
-      await SongService.fetchOneSong(songId);
+    const { id, title, artist } = await SongService.fetchOneSong(songId);
 
     return res.status(200).json({
       id,
       title,
       artist,
-      firstName,
-      profilePic,
-      email,
-      url,
       success: true,
       message: `Song retrieved`,
     });
