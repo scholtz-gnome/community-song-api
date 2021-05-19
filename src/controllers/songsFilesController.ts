@@ -18,7 +18,7 @@ export const getSongFiles = async (req: Request, res: Response) => {
 };
 
 export const deleteSongFiles = async (req: Request, res: Response) => {
-  // mock controller function for now
+  // TODO: complete controller
   console.log(req.params.id);
   res.status(200).json({
     success: true,
