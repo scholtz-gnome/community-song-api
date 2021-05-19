@@ -19,8 +19,8 @@ describe("fileRouter", () => {
       .field({ artist: "Frédéric Chopin" })
       .attach(
         "file",
-        `${__dirname}/Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf`,
-        "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf"
+        `${__dirname}/test-files/Nocturne in Eb.pdf`,
+        "Nocturne in Eb.pdf"
       );
   });
 
@@ -43,14 +43,12 @@ describe("fileRouter", () => {
 
   describe("DELETE", () => {
     describe("When a file of given id is deleted", () => {
-      it("responds with status code: 200, success: true, message: 'File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted'", async () => {
-        const res = await request(app).delete(
-          `${path}/Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf`
-        );
+      it("responds with status code: 200, success: true, and message", async () => {
+        const res = await request(app).delete(`${path}/Nocturne in Eb.pdf`);
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(
-          "File 'Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf' deleted"
+          "File 'Nocturne in Eb.pdf' deleted"
         );
         expect(res.status).toBe(200);
       });
