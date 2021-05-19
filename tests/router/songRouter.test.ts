@@ -53,8 +53,8 @@ describe("songRouter", () => {
           .field({ artist: "Frédéric Chopin" })
           .attach(
             "file",
-            `${__dirname}/Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf`,
-            "Chopin-frederic-nocturnes-opus-9-no-2-1508.pdf"
+            `${__dirname}/test-files/Nocturne in Eb.pdf`,
+            "Nocturne in Eb.pdf"
           );
 
         expect(JSON.parse(res.text).success).toBe(true);
@@ -71,7 +71,7 @@ describe("songRouter", () => {
           .field({ artist: "Flavio Copes" })
           .attach(
             "file",
-            `${__dirname}/react-beginners-handbook.pdf`,
+            `${__dirname}/test-files/react-beginners-handbook.pdf`,
             "react-beginners-handbook.pdf"
           );
 
