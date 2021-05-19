@@ -13,6 +13,10 @@
 - GET /songs/:id/files -> `getSongFiles`
 - DELETE /songs/:id/files -> `deleteSongFiles`
 
+## songsFileCollectionRouter
+
+- POST /songs/:id/file-collection -> `postSongsFileCollection`
+
 # FILES
 
 ## filesRouter
