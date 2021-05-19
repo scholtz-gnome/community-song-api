@@ -3,7 +3,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import songRouter from "./routes/songRouter";
 import communitiesRouter from "./routes/communitiesRouter";
-import fileRouter from "./routes/fileRouter";
+import filesRouter from "./routes/filesRouter";
 import authRouter from "./routes/authRouter";
 import compression from "compression";
 import { checkUser } from "./middleware/authMiddleware";
@@ -58,7 +58,7 @@ export function newApp(): Express {
 
   app.use("/songs", songRouter);
   app.use(communitiesRouter);
-  app.use("/files", fileRouter);
+  app.use(filesRouter);
   app.use(songsFilesRouter);
   app.use("/auth", authRouter);
 

@@ -1,15 +1,16 @@
 import request from "supertest";
 import express, { Express } from "express";
-import fileRouter from "../../src/routes/fileRouter";
+import filesRouter from "../../src/routes/filesRouter";
 import songRouter from "../../src/routes/songRouter";
 import db from "../../db/db.connection";
 
-describe("fileRouter", () => {
+describe("filesRouter", () => {
   const path: string = "/files";
   const app: Express = express();
 
-  app.use(path, fileRouter);
+  app.use(filesRouter);
   app.use("/songs", songRouter);
+
   beforeAll(async () => {
     jest.setTimeout(15000);
     await db.migrate.latest();
