@@ -1,10 +1,20 @@
 import aws from "aws-sdk";
-import db from "../../db/db.connection";
 import { Knex } from "knex";
 import File from "../interfaces/File";
 
 const s3 = new aws.S3();
 
+export const getFile = async (db: Knex, fileId: number): Promise<any> => {
+  try {
+    const [fileKey] = await db("file").where("id", fileId).select("key");
+    return fileKey;
+  } catch (err) {
+    console.log(err);
+    throw new Error("getFile error");
+  }
+};
+
+// TODO: possibly remove getFilesOfSong as it's under the songsFilesRepo now
 export const getFilesOfSong = async (
   db: Knex,
   songId: number
@@ -43,6 +53,7 @@ export const getS3File = async (
 };
 
 export const postFile = async (
+  db: Knex,
   key: string,
   songId: number,
   type: string | null
@@ -61,11 +72,12 @@ export const postFile = async (
 export const postS3File = async (
   key: string,
   fileData: Buffer
-): Promise<void> => {
+): Promise<string> => {
   try {
     await s3
       .upload({ Bucket: "community-song-pdfs", Key: key, Body: fileData })
       .promise();
+    return key;
   } catch (err) {
     console.log(err);
     throw new Error("s3Upload error");
@@ -91,11 +103,26 @@ export const deleteFilesOfSong = async (
   }
 };
 
-export const deleteS3File = async (key: string): Promise<void> => {
+export const deleteFile = async (db: Knex, fileId: number): Promise<string> => {
+  try {
+    const [fileKey]: string = await db("file")
+      .returning("key")
+      .where("id", fileId)
+      .del();
+
+    return fileKey;
+  } catch (err) {
+    console.log(err);
+    throw new Error("deleteFile error");
+  }
+};
+
+export const deleteS3File = async (key: string): Promise<string> => {
   try {
     await s3
       .deleteObject({ Bucket: "community-song-pdfs", Key: key })
       .promise();
+    return key;
   } catch (err) {
     console.log(err);
     throw new Error("S3 deleteObject failed");

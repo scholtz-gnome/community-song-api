@@ -1,9 +1,13 @@
 import { Router } from "express";
-import * as FileController from "../controllers/fileController";
+import fileUpload from "express-fileupload";
+import * as FilesController from "../controllers/filesController";
 
-const fileRouter: Router = Router();
+const filesRouter: Router = Router();
 
-fileRouter.get("/files/:id", FileController.getFile);
-fileRouter.delete("/files/:key", FileController.deleteFile);
+filesRouter.use(fileUpload());
 
-export default fileRouter;
+filesRouter.get("/files/:id", FilesController.getFile);
+filesRouter.post("/files", FilesController.postFile);
+filesRouter.delete("/files/:id", FilesController.deleteFile);
+
+export default filesRouter;

@@ -1,7 +1,6 @@
-import config from "../../config";
 import db from "../../db/db.connection";
 import * as SongRepo from "../repositories/songRepo";
-import * as FileRepo from "../repositories/fileRepo";
+import * as FilesRepo from "../repositories/filesRepo";
 import Song from "../interfaces/Song";
 import NewSong from "../interfaces/NewSong";
 
@@ -38,11 +37,11 @@ export const fetchOneSong = async (songId: number): Promise<Song> => {
 export const deleteSong = async (songId: number): Promise<any> => {
   try {
     const { title } = await SongRepo.deleteOneSong(db, songId);
-    const fileKeys: string[] = await FileRepo.deleteFilesOfSong(db, songId);
+    const fileKeys: string[] = await FilesRepo.deleteFilesOfSong(db, songId);
 
     if (fileKeys !== []) {
       fileKeys.forEach(async (key) => {
-        await FileRepo.deleteS3File(key);
+        await FilesRepo.deleteS3File(key);
       });
     }
 
@@ -58,54 +57,24 @@ export const deleteSong = async (songId: number): Promise<any> => {
 
 export const postSong = async (newSong: NewSong): Promise<Song> => {
   try {
-    if (newSong.file) {
-      if (newSong.file.size > config.MAX_FILE_SIZE) {
-        throw new Error("Error creating song. Size can't exceed 10MB");
-      }
-      if (newSong.file.mimetype !== "application/pdf") {
-        throw new Error("Error creating song. File must be .pdf or .txt");
-      }
-      if (!newSong.user) {
-        const createdSong = await SongRepo.postOneSong(
-          db,
-          newSong.title,
-          newSong.artist,
-          null
-        );
-
-        await FileRepo.postFile(newSong.file.name, createdSong.id, null);
-        await FileRepo.postS3File(newSong.file.name, newSong.file.data);
-
-        return createdSong;
-      } else {
-        const createdSong = await SongRepo.postOneSong(
-          db,
-          newSong.title,
-          newSong.artist,
-          newSong.user.id
-        );
-
-        await FileRepo.postFile(newSong.file.name, createdSong.id, null);
-        await FileRepo.postS3File(newSong.file.name, newSong.file.data);
-
-        return createdSong;
-      }
-    } else if (!newSong.user) {
-      const title = await SongRepo.postOneSong(
+    if (!newSong.user) {
+      const createdSong = await SongRepo.postOneSong(
         db,
         newSong.title,
         newSong.artist,
         null
       );
-      return title;
+
+      return createdSong;
     } else {
-      const title = await SongRepo.postOneSong(
+      const createdSong = await SongRepo.postOneSong(
         db,
         newSong.title,
         newSong.artist,
         newSong.user.id
       );
-      return title;
+
+      return createdSong;
     }
   } catch (err) {
     console.log(err);

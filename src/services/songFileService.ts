@@ -1,6 +1,6 @@
 import db from "../../db/db.connection";
 import * as SongsFilesRepo from "../repositories/songsFilesRepo";
-import * as FileRepo from "../repositories/fileRepo";
+import * as FilesRepo from "../repositories/filesRepo";
 
 export const fetchSongFiles = async (
   songId: number
@@ -10,7 +10,7 @@ export const fetchSongFiles = async (
     const songFileKeys = songFiles.map((file) => file.key);
 
     const unresolvedPromise = songFileKeys.map(async (key): Promise<any> => {
-      const data = await FileRepo.getS3File(key);
+      const data = await FilesRepo.getS3File(key);
       return data.Body?.toString("base64");
     });
 
