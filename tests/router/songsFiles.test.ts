@@ -2,14 +2,16 @@ import request from "supertest";
 import express, { Express } from "express";
 import db from "../../db/db.connection";
 import songsFilesRouter from "../../src/routes/songsFilesRouter";
-import songRouter from "../../src/routes/songRouter";
+import songsRouter from "../../src/routes/songsRouter";
+import filesRouter from "../../src/routes/filesRouter";
 
 describe("songsFilesRouter", () => {
   const path: string = "/songs";
   const app: Express = express();
 
   app.use(songsFilesRouter);
-  app.use(path, songRouter);
+  app.use(filesRouter);
+  app.use(songsRouter);
 
   beforeAll(async () => {
     jest.setTimeout(30000);
@@ -18,7 +20,10 @@ describe("songsFilesRouter", () => {
     await request(app)
       .post(path)
       .field({ title: "Nocturne in Eb" })
-      .field({ artist: "Frédéric Chopin" })
+      .field({ artist: "Frédéric Chopin" });
+    await request(app)
+      .post("/files")
+      .field({ songId: 1 })
       .attach(
         "file",
         `${__dirname}/test-files/Nocturne in Eb.pdf`,
