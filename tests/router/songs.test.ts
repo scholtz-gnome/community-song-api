@@ -37,7 +37,7 @@ describe("songsRouter", () => {
       it("responds with status code: 200, success: true, message: 'Song Octavarium created'", async () => {
         const res = await request(app)
           .post(path)
-          .field({ title: "Octavarium", artist: "Dream Theater" });
+          .send({ title: "Octavarium", artist: "Dream Theater" });
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe("Song Octavarium created");
