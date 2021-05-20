@@ -1,7 +1,7 @@
 import config from "../config";
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
-import songRouter from "./routes/songRouter";
+import songsRouter from "./routes/songsRouter";
 import communitiesRouter from "./routes/communitiesRouter";
 import filesRouter from "./routes/filesRouter";
 import authRouter from "./routes/authRouter";
@@ -56,9 +56,9 @@ export function newApp(): Express {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use("/songs", songRouter);
-  app.use(communitiesRouter);
   app.use(filesRouter);
+  app.use(songsRouter);
+  app.use(communitiesRouter);
   app.use(songsFilesRouter);
   app.use("/auth", authRouter);
 
