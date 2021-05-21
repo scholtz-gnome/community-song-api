@@ -4,17 +4,17 @@ import File from "../interfaces/File";
 
 const s3 = new aws.S3();
 
-export const getFile = async (db: Knex, fileId: number): Promise<any> => {
+export const getFile = async (db: Knex, fileId: number): Promise<string> => {
   try {
-    const [fileKey] = await db("file").where("id", fileId).select("key");
-    return fileKey;
+    const [file]: File[] = await db("file").where("id", fileId).select("key");
+    return file.key;
   } catch (err) {
     console.log(err);
     throw new Error("getFile error");
   }
 };
 
-// TODO: possibly remove getFilesOfSong as it's under the songsFilesRepo now
+// TODO: remove getFilesOfSong as it's under the songsFilesRepo now
 export const getFilesOfSong = async (
   db: Knex,
   songId: number
@@ -69,7 +69,7 @@ export const postFile = async (
   }
 };
 
-export const postS3File = async (
+export const createS3File = async (
   key: string,
   fileData: Buffer
 ): Promise<string> => {
@@ -84,6 +84,25 @@ export const postS3File = async (
   }
 };
 
+export const updateFile = async (
+  db: Knex,
+  key: string,
+  fileId: number
+): Promise<string> => {
+  try {
+    const [fileKey]: string = await db("file")
+      .returning("key")
+      .where("id", fileId)
+      .update({ key });
+
+    return fileKey;
+  } catch (err) {
+    console.log(err);
+    throw new Error("replaceFile repo error");
+  }
+};
+
+// TODO: remove deleteFilesOfSong as it's under the songsFilesRepo now
 export const deleteFilesOfSong = async (
   db: Knex,
   songId: number
