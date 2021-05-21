@@ -6,9 +6,9 @@ const songsRouter: Router = Router();
 songsRouter.use(express.json());
 
 songsRouter.get("/songs", SongsController.getSongs);
-songsRouter.get("songs/:id", SongsController.getSong);
-songsRouter.get("/profileSongs/:email", SongsController.getProfileSongs);
+songsRouter.get("/songs/:id", SongsController.getSong);
 songsRouter.post("/songs", SongsController.postSong);
+songsRouter.patch("/songs/:id", SongsController.patchSong);
 songsRouter.delete("/songs/:id", SongsController.deleteSong);
 
 export default songsRouter;
