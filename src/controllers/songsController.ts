@@ -5,11 +5,11 @@ import NewSong from "../interfaces/NewSong";
 
 export const getSongs = async (_: Request, res: Response) => {
   try {
-    const allSongs = await SongsService.fetchAllSongs();
+    const songs = await SongsService.fetchAllSongs();
     return res.status(200).json({
       success: true,
       message: "All songs retrieved",
-      songs: allSongs,
+      songs,
     });
   } catch (err) {
     console.log(err);
@@ -22,11 +22,13 @@ export const getSong = async (req: Request, res: Response) => {
     const { id, title, artist } = await SongsService.fetchOneSong(songId);
 
     return res.status(200).json({
-      id,
-      title,
-      artist,
       success: true,
-      message: `Song retrieved`,
+      message: `${title} retrieved`,
+      song: {
+        id,
+        title,
+        artist,
+      },
     });
   } catch (err) {
     console.log(err);
@@ -34,13 +36,23 @@ export const getSong = async (req: Request, res: Response) => {
   }
 };
 
-export const getProfileSongs = async (req: Request, res: Response) => {
-  const email: string = req.params.email;
+export const patchSong = async (req: Request, res: Response) => {
+  const songId = Number(req.params.id);
+  const updatedSong = {
+    title: req.body.title,
+    artist: req.body.artist,
+  };
   try {
-    const userSongs = await SongsService.fetchUserSongs(email);
-    return res.status(200).json(userSongs);
+    const song = await SongsService.patchSong(songId, updatedSong);
+
+    return res.status(200).json({
+      success: true,
+      message: `${song.title} updated`,
+      song,
+    });
   } catch (err) {
     console.log(err);
+    throw new Error("pathSong controller error");
   }
 };
 
