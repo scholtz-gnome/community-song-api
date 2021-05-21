@@ -24,9 +24,11 @@ describe("songsRouter", () => {
       it("responds with status code: 200, success: true, message: 'All songs retrieved'", async () => {
         const res = await request(app).get(path);
 
-        expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe("All songs retrieved");
-        expect(JSON.parse(res.text).songs).toEqual([]);
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "All songs retrieved",
+          songs: [],
+        });
         expect(res.status).toBe(200);
       });
     });
@@ -39,8 +41,10 @@ describe("songsRouter", () => {
           .post(path)
           .send({ title: "Octavarium", artist: "Dream Theater" });
 
-        expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe("Song Octavarium created");
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "Song Octavarium created",
+        });
         expect(res.status).toBe(200);
       });
     });
@@ -51,17 +55,50 @@ describe("songsRouter", () => {
       it("responds with status code: 200, success: true, message: 'All songs retrieved'", async () => {
         const res = await request(app).get(path);
 
-        expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe("All songs retrieved");
-        expect(JSON.parse(res.text).songs).toEqual([
-          {
-            title: "Octavarium",
-            artist: "Dream Theater",
-            email: null,
-            firstName: null,
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "All songs retrieved",
+          songs: [
+            {
+              title: "Octavarium",
+              artist: "Dream Theater",
+              email: null,
+              firstName: null,
+              id: 1,
+            },
+          ],
+        });
+        expect(res.status).toBe(200);
+      });
+    });
+  });
+
+  describe("PATCH", () => {
+    describe("When song of given id is updated", () => {
+      it("responds with status code: 200, success: true, message: 'Octavarium updated'", async () => {
+        const res = await request(app)
+          .patch(`${path}/1`)
+          .send({ title: "The Dance of Eternity", artist: "Dream Theater" });
+
+        expect(res.status).toBe(200);
+      });
+    });
+  });
+
+  describe("GET", () => {
+    describe("When song of given id is request", () => {
+      it("responds with status code: 200, success: true, message: 'Octavarium song fetched'", async () => {
+        const res = await request(app).get(`${path}/1`);
+
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "The Dance of Eternity retrieved",
+          song: {
             id: 1,
+            title: "The Dance of Eternity",
+            artist: "Dream Theater",
           },
-        ]);
+        });
         expect(res.status).toBe(200);
       });
     });
@@ -69,13 +106,13 @@ describe("songsRouter", () => {
 
   describe("DELETE", () => {
     describe("When a song of given id is deleted", () => {
-      it("responds with status code: 200, success: true, message: ''Octavarium' deleted from database'", async () => {
+      it("responds with status code: 200, success: true, message: ''The Dance of Eternity' deleted from database'", async () => {
         const res = await request(app).delete(`${path}/1`);
 
-        expect(JSON.parse(res.text).success).toBe(true);
-        expect(JSON.parse(res.text).message).toBe(
-          "'Octavarium' deleted from database"
-        );
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "'The Dance of Eternity' deleted from database",
+        });
         expect(res.status).toBe(200);
       });
     });
