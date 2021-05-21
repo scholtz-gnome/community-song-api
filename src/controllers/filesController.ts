@@ -31,6 +31,22 @@ export const postFile = async (req: Request, res: Response) => {
   }
 };
 
+export const putFile = async (req: Request, res: Response) => {
+  const fileId = Number(req.params.id);
+  const file = req.files?.file as UploadedFile;
+  const oldKey = req.body.oldKey;
+  try {
+    const newKey = await FilesService.updateFile(fileId, file, oldKey);
+    return res.status(200).json({
+      success: true,
+      message: `File updated to '${newKey}'`,
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error("putFile controller error");
+  }
+};
+
 export const deleteFile = async (req: Request, res: Response) => {
   const fileId = Number(req.params.id);
   try {

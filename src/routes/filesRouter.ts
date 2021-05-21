@@ -8,6 +8,7 @@ filesRouter.use(fileUpload());
 
 filesRouter.get("/files/:id", FilesController.getFile);
 filesRouter.post("/files", FilesController.postFile);
+filesRouter.put("/files/:id", FilesController.putFile);
 filesRouter.delete("/files/:id", FilesController.deleteFile);
 
 export default filesRouter;

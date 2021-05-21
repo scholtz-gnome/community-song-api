@@ -26,7 +26,7 @@ describe("filesRouter", () => {
   });
 
   describe("POST", () => {
-    describe("When one file is uploaded", () => {
+    describe("When file is created", () => {
       it("responds with status code: 200, message: 'File Nocturne in Eb.pdf created'", async () => {
         const res = await request(app)
           .post(filesPath)
@@ -46,7 +46,7 @@ describe("filesRouter", () => {
   });
 
   describe("GET", () => {
-    describe("When one song is retrieved from the S3 bucket", () => {
+    describe("When file of given id is read", () => {
       it("responds with status code: 200", async () => {
         const res = await request(app).get(`${filesPath}/1`);
 
@@ -60,6 +60,27 @@ describe("filesRouter", () => {
     });
   });
 
+  describe("PUT", () => {
+    describe("When a file of given id is replaced", () => {
+      it("responds with status code: 200, success: true, message: File updated to 'react-beginners-handbook'", async () => {
+        const res = await request(app)
+          .put(`${filesPath}/1`)
+          .field({ oldKey: "Nocturne in Eb.pdf" })
+          .attach(
+            "file",
+            `${__dirname}/test-files/react-beginners-handbook.pdf`,
+            "react-beginners-handbook.pdf"
+          );
+
+        expect(JSON.parse(res.text)).toEqual({
+          success: true,
+          message: "File updated to 'react-beginners-handbook.pdf'",
+        });
+        expect(res.status).toBe(200);
+      });
+    });
+  });
+
   describe("DELETE", () => {
     describe("When a file of given id is deleted", () => {
       it("responds with status code: 200, success: true, and message", async () => {
@@ -67,7 +88,7 @@ describe("filesRouter", () => {
 
         expect(JSON.parse(res.text).success).toBe(true);
         expect(JSON.parse(res.text).message).toBe(
-          "File 'Nocturne in Eb.pdf' deleted"
+          "File 'react-beginners-handbook.pdf' deleted"
         );
         expect(res.status).toBe(200);
       });

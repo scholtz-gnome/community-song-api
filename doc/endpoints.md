@@ -23,7 +23,7 @@
 
 - GET /files/:id -> `getFile`
 - POST /files -> `postFile`
-- PATCH /files/:id -> `patchFile`
+- PUT /files/:id -> `putFile`
 - DELETE /files/:id -> `deleteFile`
 
 # COMMUNITIES

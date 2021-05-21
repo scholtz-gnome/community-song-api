@@ -16,7 +16,7 @@ export const createFileCollection = async (
         throw new Error("Error creating song. File must be .pdf or .txt");
       }
       await FilesRepo.postFile(db, file.name, songId, null);
-      const fileKey = await FilesRepo.postS3File(file.name, file.data);
+      const fileKey = await FilesRepo.createS3File(file.name, file.data);
 
       return fileKey;
     });
