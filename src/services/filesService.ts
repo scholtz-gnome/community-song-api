@@ -41,7 +41,7 @@ export const createFile = async (
 export const deleteFile = async (fileId: number): Promise<string> => {
   try {
     const deletedFileKey = await FilesRepo.deleteFile(db, fileId);
-    console.log(deletedFileKey);
+
     const deletedFile = await FilesRepo.deleteS3File(deletedFileKey);
     return deletedFile;
   } catch (err) {
