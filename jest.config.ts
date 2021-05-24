@@ -1,6 +1,8 @@
-module.exports = {
+export default {
   testEnvironment: "node",
   preset: "ts-jest",
-  testRegex: "(/dist/__tests__/.*|(\\.|/)(test|spec))\\.[t]s?$",
+  testRegex: "(/dist/tests/.*|(\\.|/)(test))\\.[t]s?$",
   verbose: true,
+  collectCoverage: true,
+  coverageDirectory: __dirname + "/tests/coverage",
 };

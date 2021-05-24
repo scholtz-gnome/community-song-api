@@ -17,18 +17,18 @@ passport.use(google);
 passport.use(local);
 
 authRouter.post(
-  "/login/local",
+  "/auth/login/local",
   verify,
   passport.authenticate("local"),
   localLogin
 );
-authRouter.get("/login/google", passport.authenticate("google"));
+authRouter.get("/auth/login/google", passport.authenticate("google"));
 authRouter.get(
-  "/google/redirect",
-  passport.authenticate("google"),
+  "/auth/google/redirect",
+  passport.authenticate("/authgoogle"),
   getGoogleRedirect
 );
-authRouter.get("/", getUserDetails);
-authRouter.get("/logout", getLogout);
+authRouter.get("/auth/", getUserDetails);
+authRouter.get("/auth/logout", getLogout);
 
 export default authRouter;

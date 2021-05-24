@@ -8,7 +8,7 @@ export const getAllSongs = async (db: Knex): Promise<Song[]> => {
 
   return songs;
 };
-// return song || null OR raise exception where it's not found
+// TODO: return song || null OR raise exception where it's not found
 export const getOneSong = async (db: Knex, songId: number): Promise<any> => {
   const [song]: Song[] = await db<Song[]>("song")
     .where("song.id", songId)
@@ -33,6 +33,27 @@ export const postOneSong = async (
     });
 
   return createdSong;
+};
+
+export const updateSong = async (
+  db: Knex,
+  songId: number,
+  updatedSong: {
+    title: string;
+    artist: string;
+  }
+): Promise<Song> => {
+  try {
+    const [song]: Song[] = await db("song")
+      .returning(["id", "title", "artist"])
+      .where("id", songId)
+      .update({ title: updatedSong.title, artist: updatedSong.artist });
+
+    return song;
+  } catch (err) {
+    console.log(err);
+    throw new Error("updateSong repo error");
+  }
 };
 
 export const deleteOneSong = async (
