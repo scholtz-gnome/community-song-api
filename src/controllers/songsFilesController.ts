@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
-import * as SongFileService from "../services/songFileService";
+import { UploadedFile } from "express-fileupload";
+import * as SongsFilesService from "../services/songsFilesService";
 
-export const getSongFiles = async (req: Request, res: Response) => {
+export const getSongsFiles = async (req: Request, res: Response) => {
   const songId = Number(req.params.id);
   try {
-    const fileBodies = await SongFileService.fetchSongFiles(songId);
+    const fileBodies = await SongsFilesService.readSongsFiles(songId);
 
     return res.status(200).json({
       success: true,
-      message: `File bodies retrieved`,
+      message: `All files of song retrieved`,
       files: fileBodies,
     });
   } catch (err) {
@@ -17,11 +18,18 @@ export const getSongFiles = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteSongFiles = async (req: Request, res: Response) => {
-  // TODO: complete controller
-  console.log(req.params.id);
-  res.status(200).json({
-    success: true,
-    message: "You've made a DELETE request to the /songs/:id/files endpoint",
-  });
+export const postSongsFiles = async (req: Request, res: Response) => {
+  const songId = Number(req.params.id);
+  const file = req.files?.file as UploadedFile;
+  try {
+    const fileKey = await SongsFilesService.createSongsFiles(songId, file);
+
+    return res.status(200).json({
+      success: true,
+      message: `File '${fileKey}' created`,
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error("postSongsFile controller error");
+  }
 };

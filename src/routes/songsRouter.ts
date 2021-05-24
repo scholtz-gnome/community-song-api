@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import * as SongsController from "../controllers/songsController";
 
-const songsRouter: Router = Router();
+const songsRouter: Router = express.Router();
 
 songsRouter.use(express.json());
 

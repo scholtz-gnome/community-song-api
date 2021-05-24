@@ -17,27 +17,6 @@ export const fetchFile = async (
   }
 };
 
-export const createFile = async (
-  songId: number,
-  file: UploadedFile
-): Promise<string> => {
-  try {
-    if (file.size > config.MAX_FILE_SIZE) {
-      throw new Error("Error creating song. Size can't exceed 10MB");
-    }
-    if (file.mimetype !== "application/pdf") {
-      throw new Error("Error creating song. File must be .pdf or .txt");
-    }
-    await FilesRepo.postFile(db, file.name, songId, null);
-    const fileKey = await FilesRepo.createS3File(file.name, file.data);
-
-    return fileKey;
-  } catch (err) {
-    console.log(err);
-    throw new Error("uploadFiles error");
-  }
-};
-
 export const updateFile = async (
   fileId: number,
   file: UploadedFile,
@@ -53,11 +32,11 @@ export const updateFile = async (
     const newKey = await FilesRepo.updateFile(db, file.name, fileId);
     await FilesRepo.deleteS3File(oldKey);
     await FilesRepo.createS3File(newKey, file.data);
-
+    console.log(newKey);
     return newKey;
   } catch (err) {
     console.log(err);
-    throw new Error("replaceFile service error");
+    throw new Error("updateFile service error");
   }
 };
 

@@ -16,7 +16,7 @@
     "postinstall": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "pretest": "npm run build",
-    "test": "env NODE_ENV=test jest --runInBand --watchAll",
+    "test": "env NODE_ENV=test jest --runInBand",
     "githubTest": "jest --runInBand"
   },
   "author": "",

@@ -1,14 +1,17 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import fileUpload from "express-fileupload";
 import * as SongsFileCollectionController from "../controllers/songsFileCollectionController";
 
-const songsFileCollection: Router = Router();
+const songsFileCollectionRouter: Router = express.Router();
 
-songsFileCollection.use(fileUpload());
-
-songsFileCollection.post(
+songsFileCollectionRouter.patch(
   "/songs/:id/file-collection",
-  SongsFileCollectionController.postSongsFileCollection
+  fileUpload(),
+  SongsFileCollectionController.patchSongsFileCollection
+);
+songsFileCollectionRouter.delete(
+  "/songs/:id/file-collection",
+  SongsFileCollectionController.deleteSongsFileCollection
 );
 
-export default songsFileCollection;
+export default songsFileCollectionRouter;

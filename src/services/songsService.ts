@@ -1,6 +1,7 @@
 import db from "../../db/db.connection";
 import * as SongRepo from "../repositories/songRepo";
 import * as FilesRepo from "../repositories/filesRepo";
+import * as SongsFilesRepo from "../repositories/songsFilesRepo";
 import Song from "../interfaces/Song";
 import NewSong from "../interfaces/NewSong";
 
@@ -83,7 +84,10 @@ export const deleteSong = async (
 ): Promise<{ title: string }> => {
   try {
     const { title } = await SongRepo.deleteOneSong(db, songId);
-    const fileKeys: string[] = await FilesRepo.deleteFilesOfSong(db, songId);
+    const fileKeys: string[] = await SongsFilesRepo.deleteSongsFiles(
+      db,
+      songId
+    );
 
     if (fileKeys !== []) {
       fileKeys.forEach(async (key) => {

@@ -1,8 +1,8 @@
 import config from "../config";
-import { newApp } from "./app";
+import app from "./app";
 import * as http from "http";
 
-const app = newApp();
+// const app = newApp();
 
 http.createServer({}, app).listen(config.PORT, () => {
   console.log(

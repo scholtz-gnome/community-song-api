@@ -2,9 +2,8 @@ import db from "../../db/db.connection";
 import config from "../../config";
 import { UploadedFile } from "express-fileupload";
 import * as FilesRepo from "../repositories/filesRepo";
-import * as SongsFilesRepo from "../repositories/songsFilesRepo";
 
-export const updateSongsFileCollection = async (
+export const createSongsFileCollections = async (
   songId: number,
   fileCollection: UploadedFile[]
 ): Promise<string[]> => {
@@ -28,16 +27,5 @@ export const updateSongsFileCollection = async (
   } catch (err) {
     console.log(err);
     throw new Error("createFileCollection error");
-  }
-};
-
-export const deleteSongsFileCollection = async (songId: number) => {
-  try {
-    const deletedFiles = await SongsFilesRepo.deleteSongsFiles(db, songId);
-
-    return deletedFiles;
-  } catch (err) {
-    console.log(err);
-    throw new Error("deleteSongsFileCollection service error");
   }
 };
