@@ -34,19 +34,19 @@
 
 ## communitiesRouter
 
-- GET /communities -> `getCommunities`
-- GET /communities/:id -> `getCommunity`
-- POST /communities -> `postCommunity`
-- PATCH /communities/:id -> `patchCommunity`
-- DELETE /communities/:id -> `deleteCommunity`
+- GET /communities -> `getCommunities` read ALL COMMUNITIES
+- GET /communities/:id -> `getCommunity` read ONE COMMUNITY
+- POST /communities -> `postCommunity` create ONE COMMUNITY
+- PATCH /communities/:id -> `patchCommunity` update ONE COMMUNITY
+- DELETE /communities/:id -> `deleteCommunity` delete ONE COMMUNITY
 
 ## communitiesSongsRouter
 
-- GET /communities/:id/songs -> `getCommunitySongs`
+- GET /communities/:id/songs -> `getCommunitySongs` read ALL SONGS of ONE COMMUNITY
 
 ## communitiesUsersRouter
 
-- GET /communities/:id/users -> `getCommunityUsers`
+- GET /communities/:id/users -> `getCommunityUsers` read ALL USERS of ONE COMMUNITY
 
 # USERS
 
