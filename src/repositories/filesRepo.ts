@@ -52,20 +52,21 @@ export const getS3File = async (
   }
 };
 
-export const postFile = async (
+export const createFile = async (
   db: Knex,
   key: string,
   songId: number,
   type: string | null
 ): Promise<string> => {
   try {
-    const returnedKey: string = await db("file")
-      .returning(["key"])
+    const [fileKey]: string = await db("file")
+      .returning("key")
       .insert({ key, song_id: songId, type });
-    return returnedKey;
+
+    return fileKey;
   } catch (err) {
     console.log(err);
-    throw new Error("postFile error");
+    throw new Error("createFile error");
   }
 };
 
@@ -99,26 +100,6 @@ export const updateFile = async (
   } catch (err) {
     console.log(err);
     throw new Error("replaceFile repo error");
-  }
-};
-
-// TODO: remove deleteFilesOfSong as it's under the songsFilesRepo now
-export const deleteFilesOfSong = async (
-  db: Knex,
-  songId: number
-): Promise<string[]> => {
-  try {
-    const files: File[] = await db("file")
-      .returning(["key"])
-      .where("id", songId)
-      .del();
-
-    const fileKeys = files.map((file) => file.key);
-
-    return fileKeys;
-  } catch (err) {
-    console.log(err);
-    throw new Error("deleteFile error");
   }
 };
 

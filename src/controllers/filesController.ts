@@ -14,20 +14,7 @@ export const getFile = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(404);
-  }
-};
-
-export const postFile = async (req: Request, res: Response) => {
-  const songId = Number(req.body.songId);
-  const file = req.files?.file as UploadedFile;
-  try {
-    const fileKey = await FilesService.createFile(songId, file);
-
-    return res.status(200).json({ message: `File ${fileKey} created` });
-  } catch (err) {
-    console.log(err);
-    throw new Error("postFile error");
+    throw new Error("getFile controller error");
   }
 };
 
@@ -37,6 +24,7 @@ export const putFile = async (req: Request, res: Response) => {
   const oldKey = req.body.oldKey;
   try {
     const newKey = await FilesService.updateFile(fileId, file, oldKey);
+
     return res.status(200).json({
       success: true,
       message: `File updated to '${newKey}'`,
@@ -58,5 +46,6 @@ export const deleteFile = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
+    throw new Error("deleteFile controller error");
   }
 };

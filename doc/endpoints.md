@@ -2,29 +2,33 @@
 
 ## songsRouter
 
-- GET /songs -> `getSongs`
-- GET /songs/:id -> `getSong`
-- POST /songs -> `postSong`
-- PATCH /songs/:id -> `patchSong`
-- DELETE /songs/:id -> `deleteSong`
+- GET /songs -> `getSongs` read ALL SONGS
+- GET /songs/:id -> `getSong` read ONE SONG
+- POST /songs -> `postSong` create ONE SONG
+- PATCH /songs/:id -> `patchSong` update ONE SONG
+- DELETE /songs/:id -> `deleteSong` delete ONE SONG
 
 ## songsFilesRouter
 
-- GET /songs/:id/files -> `getSongFiles`
-- DELETE /songs/:id/files -> `deleteSongFiles`
+- GET /songs/:id/files -> `getSongsFiles` read ALL FILES of ONE SONG
+- POST /songs/:id/files -> `postSongsFiles` create ONE FILE of ONE SONG
+
+## songsFileCollectionsRouter
+
+- POST /songs/:id/file-collections -> `postSongsFileCollections` create ONE FILE-COLLECTION of ONE SONG
 
 ## songsFileCollectionRouter
 
-- POST /songs/:id/file-collection -> `postSongsFileCollection`
+- PATCH /songs/:id/file-collection -> `patchSongsFileCollection` update ONE FILE-COLLECTION of ONE SONG
+- DELETE /songs/:id/file-collection -> `deleteSongsFileCollection` delete ONE FILE-COLLECTION of ONE SONG
 
 # FILES
 
 ## filesRouter
 
-- GET /files/:id -> `getFile`
-- POST /files -> `postFile`
-- PUT /files/:id -> `putFile`
-- DELETE /files/:id -> `deleteFile`
+- GET /files/:id -> `getFile` read ONE FILE
+- PUT /files/:id -> `putFile` replace ONE FILE
+- DELETE /files/:id -> `deleteFile` delete ONE FILE
 
 # COMMUNITIES
 

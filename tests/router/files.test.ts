@@ -1,53 +1,33 @@
 import request from "supertest";
-import express, { Express } from "express";
-import songsRouter from "../../src/routes/songsRouter";
-import filesRouter from "../../src/routes/filesRouter";
 import db from "../../db/db.connection";
+import app from "../../src/app";
+
+const filesPath: string = "/files";
 
 describe("filesRouter", () => {
-  const filesPath: string = "/files";
-  const app: Express = express();
-
-  app.use(songsRouter);
-  app.use(filesRouter);
-
   beforeAll(async () => {
-    jest.setTimeout(25000);
+    jest.setTimeout(20000);
     await db.migrate.rollback();
     await db.migrate.latest();
     await request(app)
       .post("/songs")
-      .send({ title: "Nocturne in Eb" })
-      .send({ artist: "Frédéric Chopin" });
+      .send({ title: "Nocturne in Eb", artist: "Frédéric Chopin" });
+    await request(app)
+      .post("/songs/1/files")
+      .attach(
+        "file",
+        `${__dirname}/test-files/Nocturne in Eb.pdf`,
+        "Nocturne in Eb.pdf"
+      );
   });
 
   afterAll(async () => {
     await db.destroy();
   });
 
-  describe("POST", () => {
-    describe("When file is created", () => {
-      it("responds with status code: 200, message: 'File Nocturne in Eb.pdf created'", async () => {
-        const res = await request(app)
-          .post(filesPath)
-          .field({ songId: 1 })
-          .attach(
-            "file",
-            `${__dirname}/test-files/Nocturne in Eb.pdf`,
-            "Nocturne in Eb.pdf"
-          );
-
-        expect(JSON.parse(res.text).message).toBe(
-          "File Nocturne in Eb.pdf created"
-        );
-        expect(res.status).toBe(200);
-      });
-    });
-  });
-
   describe("GET", () => {
     describe("When file of given id is read", () => {
-      it("responds with status code: 200", async () => {
+      it("responds with status code: 200, success: true, message: 'File retrieved'", async () => {
         const res = await request(app).get(`${filesPath}/1`);
 
         expect(JSON.parse(res.text).success).toBe(true);

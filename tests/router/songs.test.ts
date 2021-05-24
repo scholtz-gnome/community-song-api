@@ -1,13 +1,9 @@
 import request from "supertest";
-import express, { Express } from "express";
-import songsRouter from "../../src/routes/songsRouter";
 import db from "../../db/db.connection";
+import app from "../../src/app";
 
 describe("songsRouter", () => {
   const path: string = "/songs";
-  const app: Express = express();
-
-  app.use(songsRouter);
 
   beforeAll(async () => {
     jest.setTimeout(15000);

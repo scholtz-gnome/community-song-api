@@ -4,11 +4,8 @@ import * as FilesController from "../controllers/filesController";
 
 const filesRouter: Router = Router();
 
-filesRouter.use(fileUpload());
-
 filesRouter.get("/files/:id", FilesController.getFile);
-filesRouter.post("/files", FilesController.postFile);
-filesRouter.put("/files/:id", FilesController.putFile);
+filesRouter.put("/files/:id", fileUpload(), FilesController.putFile);
 filesRouter.delete("/files/:id", FilesController.deleteFile);
 
 export default filesRouter;

@@ -2,13 +2,15 @@ import request from "supertest";
 import db from "../../db/db.connection";
 import app from "../../src/app";
 
-describe("songsFileCollectionRouter", () => {
+describe("songsFileCollectionsRouter", () => {
+  const path: string = "/songs";
+
   beforeAll(async () => {
     jest.setTimeout(20000);
     await db.migrate.rollback();
     await db.migrate.latest();
     await request(app)
-      .post("/songs")
+      .post(path)
       .send({ title: "Nocturne in Eb", artist: "Frédéric Chopin" });
   });
 
@@ -16,11 +18,11 @@ describe("songsFileCollectionRouter", () => {
     await db.destroy();
   });
 
-  describe("PATCH", () => {
-    describe("When ONE FILE-COLLECTION of song of given id is updated", () => {
-      it("responds with status code: 200, success: true, message: 'File-collection updated'", async () => {
+  describe("POST", () => {
+    describe("When ONE FILE-COLLECTION is created for song of given id", () => {
+      it("responds with status code: 200, success: true, message: File-collection created", async () => {
         const res = await request(app)
-          .patch("/songs/1/file-collection")
+          .post(`${path}/1/file-collections`)
           .attach(
             "file",
             `${__dirname}/test-files/Nocturne in Eb.pdf`,
@@ -34,21 +36,7 @@ describe("songsFileCollectionRouter", () => {
 
         expect(JSON.parse(res.text)).toEqual({
           success: true,
-          message: "File-collection updated",
-        });
-        expect(res.status).toBe(200);
-      });
-    });
-  });
-
-  describe("DELETE", () => {
-    describe("When ONE FILE-COLLECTION of song of given id is deleted", () => {
-      it("responds with status code: 200, success: true, message: 'File-collection deleted'", async () => {
-        const res = await request(app).delete("/songs/1/file-collection");
-
-        expect(JSON.parse(res.text)).toEqual({
-          success: true,
-          message: "File-collection deleted",
+          message: "File-collection created",
         });
         expect(res.status).toBe(200);
       });
