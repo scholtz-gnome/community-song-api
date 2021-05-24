@@ -65,6 +65,6 @@ app.use(songsFileCollectionRouter);
 app.use(songsFileCollectionsRouter);
 app.use(songsFilesRouter);
 app.use(communitiesRouter);
-app.use("/auth", authRouter);
+app.use(authRouter);
 
 export default app;
