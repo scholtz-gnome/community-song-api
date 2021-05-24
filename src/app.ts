@@ -32,7 +32,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-if (config.NODE_ENV !== "test") {
+if (config.NODE_ENV === "development" || config.NODE_ENV === "production") {
   app.use(
     csurf({
       cookie: {
