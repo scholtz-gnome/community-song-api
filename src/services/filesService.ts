@@ -32,7 +32,7 @@ export const updateFile = async (
     const newKey = await FilesRepo.updateFile(db, file.name, fileId);
     await FilesRepo.deleteS3File(oldKey);
     await FilesRepo.createS3File(newKey, file.data);
-    console.log(newKey);
+
     return newKey;
   } catch (err) {
     console.log(err);
