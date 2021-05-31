@@ -5,18 +5,20 @@ import * as FilesRepo from "../repositories/filesRepo";
 
 export const createSongsFileCollections = async (
   songId: number,
-  fileCollection: UploadedFile[]
+  fileCollection: UploadedFile[],
+  fileNames: string[],
+  fileTypes: string[]
 ): Promise<string[]> => {
   try {
-    const unresolvedPromise = fileCollection.map(async (file) => {
+    const unresolvedPromise = fileCollection.map(async (file, i) => {
       if (file.size > config.MAX_FILE_SIZE) {
         throw new Error("Error creating song. Size can't exceed 10MB");
       }
       if (file.mimetype !== "application/pdf") {
         throw new Error("Error creating song. File must be .pdf or .txt");
       }
-      await FilesRepo.createFile(db, file.name, songId, null);
-      const fileKey = await FilesRepo.createS3File(file.name, file.data);
+      await FilesRepo.createFile(db, fileNames[i], songId, fileTypes[i]);
+      const fileKey = await FilesRepo.createS3File(fileNames[i], file.data);
 
       return fileKey;
     });

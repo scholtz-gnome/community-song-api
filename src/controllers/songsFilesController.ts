@@ -21,9 +21,15 @@ export const getSongsFiles = async (req: Request, res: Response) => {
 export const postSongsFiles = async (req: Request, res: Response) => {
   const songId = Number(req.params.id);
   const file = req.files?.file as UploadedFile;
+  const fileName = req.body.fileName;
+  const type = req.body.type;
   try {
-    const fileKey = await SongsFilesService.createSongsFiles(songId, file);
-
+    const fileKey = await SongsFilesService.createSongsFiles(
+      songId,
+      file,
+      fileName,
+      type
+    );
     return res.status(200).json({
       success: true,
       message: `File '${fileKey}' created`,

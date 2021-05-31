@@ -59,15 +59,14 @@ export const patchSong = async (req: Request, res: Response) => {
 export const postSong = async (req: Request, res: Response) => {
   const newSong: NewSong = {
     title: req.body.title,
+    alternateTitle: req.body.alternateTitle,
     artist: req.body.artist,
     user: req.user as User,
   };
   try {
     const createdSong = await SongsService.postSong(newSong);
 
-    return res
-      .status(200)
-      .json({ success: true, message: `Song ${createdSong.title} created` });
+    return res.status(200).json(createdSong);
   } catch (err) {
     console.log(err);
     throw new Error("postSong error");

@@ -41,6 +41,7 @@ export const postSong = async (newSong: NewSong): Promise<Song> => {
       const createdSong = await SongRepo.postOneSong(
         db,
         newSong.title,
+        newSong.alternateTitle,
         newSong.artist,
         null
       );
@@ -50,6 +51,7 @@ export const postSong = async (newSong: NewSong): Promise<Song> => {
       const createdSong = await SongRepo.postOneSong(
         db,
         newSong.title,
+        newSong.alternateTitle,
         newSong.artist,
         newSong.user.id
       );

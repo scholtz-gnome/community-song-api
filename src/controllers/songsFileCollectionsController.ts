@@ -5,12 +5,15 @@ import * as SongsFileCollectionsService from "../services/songsFileCollectionsSe
 export const postSongsFileCollections = async (req: Request, res: Response) => {
   const songId = Number(req.params.id);
   const fileCollection = req.files?.file as UploadedFile[];
+  const fileNames: string[] = req.body.fileNames;
+  const fileTypes: string[] = req.body.types;
   try {
-    const fileKeys =
-      await SongsFileCollectionsService.createSongsFileCollections(
-        songId,
-        fileCollection
-      );
+    await SongsFileCollectionsService.createSongsFileCollections(
+      songId,
+      fileCollection,
+      fileNames,
+      fileTypes
+    );
 
     return res.status(200).json({
       success: true,
