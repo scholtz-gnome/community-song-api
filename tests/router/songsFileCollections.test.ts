@@ -32,7 +32,11 @@ describe("songsFileCollectionsRouter", () => {
             "file",
             `${__dirname}/test-files/react-beginners-handbook.pdf`,
             "react-beginners-handbook.pdf"
-          );
+          )
+          .field({
+            fileNames: ["Nocturne", "React Book"],
+            types: ["chords and lyrics", "sheet music"],
+          });
 
         expect(JSON.parse(res.text)).toEqual({
           success: true,

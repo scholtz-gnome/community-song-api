@@ -27,11 +27,12 @@ describe("songsFilesRouter", () => {
             "file",
             `${__dirname}/test-files/Nocturne in Eb.pdf`,
             "Nocturne in Eb.pdf"
-          );
+          )
+          .field({ fileName: "Nocturne in Eb", type: "guitar tabs" });
 
         expect(JSON.parse(res.text)).toEqual({
           success: true,
-          message: "File 'Nocturne in Eb.pdf' created",
+          message: "File 'Nocturne in Eb' created",
         });
         expect(res.status).toBe(200);
       });
@@ -45,11 +46,12 @@ describe("songsFilesRouter", () => {
             "file",
             `${__dirname}/test-files/react-beginners-handbook.pdf`,
             "react-beginners-handbook.pdf"
-          );
+          )
+          .field({ fileName: "React Book", type: "lyrics" });
 
         expect(JSON.parse(res.text)).toEqual({
           success: true,
-          message: "File 'react-beginners-handbook.pdf' created",
+          message: "File 'React Book' created",
         });
         expect(res.status).toBe(200);
       });

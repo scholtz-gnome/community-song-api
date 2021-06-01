@@ -14,26 +14,6 @@ export const getFile = async (db: Knex, fileId: number): Promise<string> => {
   }
 };
 
-// TODO: remove getFilesOfSong as it's under the songsFilesRepo now
-export const getFilesOfSong = async (
-  db: Knex,
-  songId: number
-): Promise<string[]> => {
-  try {
-    const files: File[] = await db("file")
-      .returning(["key"])
-      .where("file.song_id", songId)
-      .select("key");
-
-    const fileKeys = files.map((file) => file.key);
-
-    return fileKeys;
-  } catch (err) {
-    console.log(err);
-    throw new Error("getFile error");
-  }
-};
-
 export const getS3File = async (
   key: string
 ): Promise<aws.S3.GetObjectOutput> => {
@@ -56,7 +36,7 @@ export const createFile = async (
   db: Knex,
   key: string,
   songId: number,
-  type: string | null
+  type: string
 ): Promise<string> => {
   try {
     const [fileKey]: string = await db("file")

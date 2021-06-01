@@ -26,10 +26,12 @@ export const readSongsFiles = async (
 
 export const createSongsFiles = async (
   songId: number,
-  file: UploadedFile
+  file: UploadedFile,
+  fileName: string,
+  type: string
 ): Promise<string> => {
   try {
-    const fileKey = await FilesRepo.createFile(db, file.name, songId, null);
+    const fileKey = await FilesRepo.createFile(db, fileName, songId, type);
     await FilesRepo.createS3File(fileKey, file.data);
 
     return fileKey;
