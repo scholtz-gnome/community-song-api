@@ -18,7 +18,8 @@ describe("filesRouter", () => {
         "file",
         `${__dirname}/test-files/Nocturne in Eb.pdf`,
         "Nocturne in Eb.pdf"
-      );
+      )
+      .field({ fileName: "Nocturne in Eb", type: "chords and lyrics" });
   });
 
   afterAll(async () => {

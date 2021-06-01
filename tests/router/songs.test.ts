@@ -38,8 +38,8 @@ describe("songsRouter", () => {
           .send({ title: "Octavarium", artist: "Dream Theater" });
 
         expect(JSON.parse(res.text)).toEqual({
-          success: true,
-          message: "Song Octavarium created",
+          id: 1,
+          title: "Octavarium",
         });
         expect(res.status).toBe(200);
       });

@@ -5,10 +5,14 @@ import { UploadedFile } from "express-fileupload";
 export const patchSongsFileCollection = async (req: Request, res: Response) => {
   const songId: number = Number(req.params.id);
   const fileCollection = req.files?.file as UploadedFile[];
+  const fileNames: string[] = req.body.fileNames;
+  const fileTypes: string[] = req.body.types;
   try {
-    const fileKeys = await SongsFileCollectionService.updateSongsFileCollection(
+    await SongsFileCollectionService.updateSongsFileCollection(
       songId,
-      fileCollection
+      fileCollection,
+      fileNames,
+      fileTypes
     );
 
     return res
